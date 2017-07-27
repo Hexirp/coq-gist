@@ -46,7 +46,7 @@ Proof.
   apply done.
   apply f.
   apply r0.
-Qed.
+Defined.
 
 Definition void : Type := Empty_set.
 
@@ -62,3 +62,47 @@ Proof.
  -
   apply r0.
 Defined.
+
+Definition pipe_from_list : forall o, list o -> pipe void unit o unit.
+Proof.
+ intros o A.
+ induction A.
+ -
+  apply done.
+  apply tt.
+ -
+  apply yield.
+  +
+   apply a.
+  +
+   apply IHA.
+Defined.
+
+Definition test_1 : pipe void unit nat unit := pipe_from_list nat (0 :: 1 :: 2 :: 3 :: nil).
+Definition test_2 : pipe nat unit nat unit.
+Proof.
+ apply await.
+ -
+  intros A.
+  induction A.
+  +
+   apply done.
+   apply tt.
+  +
+   apply IHA.
+ -
+  apply done.
+Defined.
+Definition test_3 : pipe void unit nat unit := compose _ _ _ _ _ _ test_2 test_1.
+
+Eval cbv delta iota beta in test_1.
+Print test_2.
+Eval cbv delta iota beta in test_3.
+
+Extraction Language Haskell.
+
+Extraction pipe_rect.
+Extraction compose.
+Extraction map_p.
+Extraction run_p.
+Extraction pipe_from_list.
