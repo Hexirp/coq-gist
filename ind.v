@@ -7,15 +7,16 @@ Inductive composing (k : Type -> Type -> Type) (a b : Type) : Type :=
 Definition compose
  : forall k a b, (forall x y z, k x y -> k y z -> k x z) -> composing k a b -> k a b.
 Proof.
- fix go 5.
- intros k a b f x.
+ intros k.
+ fix go 4.
+ intros a b f x.
  case x.
  -
   intros xLeaf.
   apply xLeaf.
  -
   intros xImpl xLeft xRight.
-  apply f with xImpl.
+  apply (f a xImpl b).
   +
    apply go.
    apply f.
@@ -28,7 +29,7 @@ Save.
 
 Definition viewL
  : forall k a b r,
-  composing k a b -> (k a b -> r) -> (forall x, k a x ->  composing k x b -> r) -> r.
+  composing k a b -> (k a b -> r) -> (forall x, k a x -> composing k x b -> r) -> r.
 Proof.
  intros k a b r x fL fT.
  case x.
@@ -42,18 +43,18 @@ Proof.
   case xLeft.
   +
    intros xLeftLeaf.
-   apply fT with xImpl.
+   apply (fT xImpl).
    *
     apply xLeftLeaf.
    *
     apply xRight.
   +
    intros xLeftImpl xLeftLeft xLeftRight.
-   apply go with xLeftImpl.
+   apply (go xLeftImpl).
    *
     apply xLeftLeft.
    *
-    apply tree with xImpl.
+    apply (tree _ _ _ xImpl).
     --
      apply xLeftRight.
     --
