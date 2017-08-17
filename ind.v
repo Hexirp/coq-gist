@@ -60,3 +60,28 @@ Proof.
     --
      apply xRight.
 Save.
+
+Definition kleisli (m : Type -> Type) (a b : Type) : Type := a -> m b.
+
+Inductive skeleton (t : Type -> Type) (a : Type) : Type :=
+ | returnS : a -> skeleton t a
+ | bindS : forall x, t x -> composing (kleisli (skeleton t)) x a -> skeleton t a.
+
+Inductive monadic (t m : Type -> Type) (a : Type) :=
+ | retn : a -> monadic t m a
+ | bn : forall x, t x -> (x -> m a) -> monadic t m a.
+
+Definition debone : forall t a, skeleton t a -> monadic t (skeleton t) a.
+Proof.
+ intros t a x.
+ case x.
+ -
+  intros xRet.
+  apply retn.
+  apply xRet.
+ -
+  intros xImpl xValue xFunc.
+  apply (bn _ _ _ xImpl).
+  +
+   apply xValue.
+Admitted.
