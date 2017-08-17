@@ -10,7 +10,7 @@ Proof.
  intros k.
  fix go 4.
  intros a b f x.
- case x.
+ case x; clear x.
  -
   intros xLeaf.
   apply xLeaf.
@@ -32,7 +32,7 @@ Definition viewL
   composing k a b -> (k a b -> r) -> (forall x, k a x -> composing k x b -> r) -> r.
 Proof.
  intros k a b r x fL fT.
- case x.
+ case x; clear x.
  -
   intros xLeft.
   apply fL.
@@ -40,7 +40,7 @@ Proof.
  -
   fix go 2.
   intros xImpl xLeft xRight.
-  case xLeft.
+  case xLeft; clear xLeft.
   +
    intros xLeftLeaf.
    apply (fT xImpl).
@@ -71,12 +71,14 @@ Inductive monadic (t m : Type -> Type) (a : Type) :=
  | retn : a -> monadic t m a
  | bn : forall x, t x -> (x -> m a) -> monadic t m a.
 
+Axiom undefined : forall a, a.
+
 Definition run_comp : forall t a b, composing (kleisli (skeleton t)) a b -> a -> skeleton t b.
 Proof.
  intros t.
  fix go 3.
  intros a b f x.
- case f.
+ case f; clear f.
  -
   intros fLeaf.
   apply fLeaf.
@@ -84,18 +86,19 @@ Proof.
  -
   fix go' 2.
   intros fImpl fLeft fRight.
-  case fLeft.
+  case fLeft; clear fLeft.
   +
    intros fLeftLeaf.
-   case (fLeftLeaf x).
+   case (fLeftLeaf x); clear fLeftLeaf.
    *
-    intros fLeftLeafSkeletonReturn.
-    apply (go _ _ fRight). (* This appliecation is based lazy evaluation. *)
-    apply fLeftLeafSkeletonReturn.
+    intros fLeftLeafReturnS.
+    apply (go _ _ fRight).
+    apply fLeftLeafReturnS.
+     (* This appliecation is based lazy evaluation. undefined is fLeftLeafReturnS. *)
    *
-    intros fLeftLeafSkeletonImpl fLeftLeafSkeletonValue fLeftLeafSkeletonFunc.
-    apply (bindS _ _ _ fLeftLeafSkeletonValue).
-    apply (tree _ _ _ _ fLeftLeafSkeletonFunc).
+    intros fLeftLeafBindSImpl fLeftLeafBindSValue fLeftLeafBindSFunc.
+    apply (bindS _ _ _ fLeftLeafBindSValue).
+    apply (tree _ _ _ _ fLeftLeafBindSFunc).
     apply fRight.
   +
    intros fLeftImpl fLeftLeft fLeftRight.
@@ -110,7 +113,7 @@ Admitted. (* Because run_comp isn't stop. *)
 Definition debone : forall t a, skeleton t a -> monadic t (skeleton t) a.
 Proof.
  intros t a x.
- case x.
+ case x; clear.
  -
   intros xReturnS.
   apply retn.
