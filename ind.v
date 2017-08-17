@@ -90,39 +90,37 @@ Proof.
    case (fLeftLeaf x).
    *
     intros fLeftLeafSkeletonReturn.
-    apply (go _ _ fRight).
+    apply (go _ _ fRight). (* This appliecation is based lazy evaluation. *)
     apply fLeftLeafSkeletonReturn.
    *
     intros fLeftLeafSkeletonImpl fLeftLeafSkeletonValue fLeftLeafSkeletonFunc.
-Admitted.
+    apply (bindS _ _ _ fLeftLeafSkeletonValue).
+    apply (tree _ _ _ _ fLeftLeafSkeletonFunc).
+    apply fRight.
+  +
+   intros fLeftImpl fLeftLeft fLeftRight.
+   apply (go' _ fLeftLeft).
+   apply (tree _ _ _ fImpl).
+   *
+    apply fLeftRight.
+   *
+    apply fRight.
+Admitted. (* Because run_comp isn't stop. *)
 
 Definition debone : forall t a, skeleton t a -> monadic t (skeleton t) a.
 Proof.
- intros T A x.
+ intros t a x.
  case x.
  -
-  intros xRet.
+  intros xReturnS.
   apply retn.
-  apply xRet.
+  apply xReturnS.
  -
-  intros X t c.
-  apply (bn _ _ _ X).
+  intros xBindSImpl xBindSValue xBindSFunc.
+  apply (bn _ _ _ xBindSImpl).
   +
-   apply t.
+   apply xBindSValue.
   +
-   revert c.
-   generalize X A.
-   fix go 3.
-   intros Y B c y.
-   case c.
-   *
-    intros yb.
-    apply yb.
-    apply y.
-   *
-    fix go' 2.
-    intros YB cL cR.
-    case cL.
-    --
-     intros cLL.
-Admitted.
+   apply run_comp.
+   apply xBindSFunc.
+Save.
