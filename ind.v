@@ -71,17 +71,58 @@ Inductive monadic (t m : Type -> Type) (a : Type) :=
  | retn : a -> monadic t m a
  | bn : forall x, t x -> (x -> m a) -> monadic t m a.
 
+Definition run_comp : forall t a b, composing (kleisli (skeleton t)) a b -> a -> skeleton t b.
+Proof.
+ intros t.
+ fix go 3.
+ intros a b f x.
+ case f.
+ -
+  intros fLeaf.
+  apply fLeaf.
+  apply x.
+ -
+  fix go' 2.
+  intros fImpl fLeft fRight.
+  case fLeft.
+  +
+   intros fLeftLeaf.
+   case (fLeftLeaf x).
+   *
+    intros fLeftLeafSkeletonReturn.
+    apply (go _ _ fRight).
+    apply fLeftLeafSkeletonReturn.
+   *
+    intros fLeftLeafSkeletonImpl fLeftLeafSkeletonValue fLeftLeafSkeletonFunc.
+Admitted.
+
 Definition debone : forall t a, skeleton t a -> monadic t (skeleton t) a.
 Proof.
- intros t a x.
+ intros T A x.
  case x.
  -
   intros xRet.
   apply retn.
   apply xRet.
  -
-  intros xImpl xValue xFunc.
-  apply (bn _ _ _ xImpl).
+  intros X t c.
+  apply (bn _ _ _ X).
   +
-   apply xValue.
+   apply t.
+  +
+   revert c.
+   generalize X A.
+   fix go 3.
+   intros Y B c y.
+   case c.
+   *
+    intros yb.
+    apply yb.
+    apply y.
+   *
+    fix go' 2.
+    intros YB cL cR.
+    case cL.
+    --
+     intros cLL.
 Admitted.
