@@ -6,11 +6,48 @@ Inductive listp A : (A -> listp A -> Prop) -> Type :=
 | cnp : forall P (x : A) (xs : list A), P x xs -> listp A P.
 *)
 
-Definition uniques : list nat -> bool.
+Definition inl : nat -> list nat -> bool.
 Proof.
  intros x.
- induction x.
- - (* nil *)
+ fix go 1.
+ intros y.
+ case y; clear y.
+ -
   apply true.
- - (* cons *)
-Abort.
+ -
+  intros y ys.
+  apply orb.
+  +
+   apply eqb.
+   *
+    apply x.
+   *
+    apply y.
+  +
+   apply go.
+   apply ys.
+Save.
+
+Definition uniques : list nat -> bool.
+Proof.
+ fix go 1.
+ intros x.
+ case x; clear x.
+ -
+  apply true.
+ -
+  intros x xs.
+  apply andb.
+  +
+   apply negb.
+   apply inl.
+   *
+    apply x.
+   *
+    apply xs.
+  +
+   apply go.
+   apply xs.
+Save.
+
+Definition set := { x : list nat | eq_true (uniques x) }.
