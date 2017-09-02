@@ -52,7 +52,32 @@ Save.
 
 Definition set := { x : list nat | eq_true (uniques x) }.
 
+Definition add_inner : nat -> list nat -> list nat.
+Proof.
+ intros x.
+ fix go 1.
+ intros y.
+ case y; clear y.
+ -
+  apply nil.
+ -
+  intros y ys.
+  case (eqb x y).
+  +
+   apply ys.
+  +
+   apply cons.
+   *
+    apply y.
+   *
+    apply go.
+    apply ys.
+Save.
+
 Definition add : nat -> set -> set.
 Proof.
  intros x y.
+ case y; clear y.
+ intros y yH.
+ exists (add_inner x y).
 Abort.
