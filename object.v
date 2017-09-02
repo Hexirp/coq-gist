@@ -40,4 +40,23 @@ Proof.
  intros go hgObj gfObj.
  apply mkobj.
  intros x xfCo.
- apply map with (prod (prod x (object g h)) (object f g)).
+ apply map with (prod (prod x (object f g)) (object g h)).
+ -
+  intros p.
+  case p.
+  intros pl pr.
+  case pl.
+  intros pll plr.
+  split.
+  +
+   apply pll.
+  +
+   apply go.
+   *
+    apply pr.
+   *
+    apply plr.
+ -
+  case hgObj.
+  intros hgObjRun.
+  apply hgObjRun.
