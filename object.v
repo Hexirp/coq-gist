@@ -32,9 +32,12 @@ Save.
 Inductive object (f g : Type -> Type) : Type :=
  | mkobj : (forall x, coyoneda f x -> coyoneda g (prod x (object f g))) -> object f g.
 
+Axiom Fix : forall (a : Type), (a -> a) -> a.
+
 Definition compose f g h : object g h -> object f g -> object f h.
 Proof.
- intros hgObj gfObj.
+ apply Fix.
+ intros go hgObj gfObj.
  apply mkobj.
  intros x xfCo.
- apply 
+ apply map with (prod (prod x (object g h)) (object f g)).
