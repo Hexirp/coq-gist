@@ -51,3 +51,8 @@ Proof.
 Save.
 
 Definition set := { x : list nat | eq_true (uniques x) }.
+
+Definition add : nat -> set -> set.
+Proof.
+ intros x y.
+Abort.
