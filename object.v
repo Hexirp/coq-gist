@@ -1,5 +1,7 @@
 Require Import Init.
 
+Set Universe Polymorphism.
+
 Inductive coyoneda (f : Type -> Type) (a : Type) : Type :=
  | mkcoyoneda : forall x, (x -> a) -> f x -> coyoneda f a.
 
@@ -32,6 +34,15 @@ Save.
 Inductive object (f g : Type -> Type) : Type :=
  | mkobj : (forall x, coyoneda f x -> coyoneda g (prod x (object f g))) -> object f g.
 
+Definition runobj f g a : object f g -> coyoneda f a -> coyoneda g (prod a (object f g)).
+Proof.
+ intros gfObj afCo.
+ case gfObj.
+ intros gfObjRun.
+ apply gfObjRun.
+ apply afCo.
+Save.
+
 Axiom Fix : forall (a : Type), (a -> a) -> a.
 
 Definition compose f g h : object g h -> object f g -> object f h.
@@ -57,6 +68,15 @@ Proof.
    *
     apply plr.
  -
-  case hgObj.
-  intros hgObjRun.
-  apply hgObjRun.
+  apply runobj.
+  +
+   apply hgObj.
+  +
+   apply runobj.
+   *
+    apply gfObj.
+   *
+    apply xfCo.
+Save.
+
+Print compose.
