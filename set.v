@@ -3,7 +3,7 @@ Require Import Init Nat.
 (*
 Inductive listp A : (A -> listp A -> Prop) -> Type :=
 | nlp : forall P, listp A P
-| cnp : forall P (x : A) (xs : list A), P x xs -> listp A P.
+| cnp : forall P (x : A) (xs : list A), P x xs -> listp A P
 *)
 
 Definition inl : nat -> list nat -> bool.
@@ -74,6 +74,18 @@ Proof.
     apply ys.
 Defined.
 
+Definition exmdl : forall x, x = true \/ x = false.
+Proof.
+ intros x.
+ case x.
+ -
+  left.
+  apply eq_refl.
+ -
+  right.
+  apply eq_refl.
+Defined.
+
 Definition add : nat -> set -> set.
 Proof.
  intros x y.
@@ -85,12 +97,27 @@ Proof.
  case y; clear y.
  -
   intros _.
-  unfold add_inner.
-  unfold uniques.
-  unfold inl.
-  unfold negb.
-  unfold andb.
   apply is_eq_true.
  -
   intros y ys yH.
-Abort.
+  unfold add_inner.
+  case (exmdl (eqb x y)).
+  +
+   intros eqH.
+   rewrite eqH.
+   unfold uniques in yH.
+   case (exmdl (negb (inl y ys))).
+   *
+    intros neH.
+    rewrite neH in yH.
+    unfold andb in yH.
+    unfold uniques.
+    unfold andb.
+    apply yH.
+   *
+    intros neH.
+    rewrite neH in yH.
+    unfold andb in yH.
+    generalize (eq_refl true).
+    pattern true at 1.
+    case yH.
