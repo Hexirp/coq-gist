@@ -13,7 +13,7 @@ Proof.
  intros y.
  case y; clear y.
  -
-  apply true.
+  apply false.
  -
   intros y ys.
   apply orb.
@@ -26,7 +26,7 @@ Proof.
   +
    apply go.
    apply ys.
-Save.
+Defined.
 
 Definition uniques : list nat -> bool.
 Proof.
@@ -48,7 +48,7 @@ Proof.
   +
    apply go.
    apply xs.
-Save.
+Defined.
 
 Definition set := { x : list nat | eq_true (uniques x) }.
 
@@ -59,7 +59,7 @@ Proof.
  intros y.
  case y; clear y.
  -
-  apply nil.
+  apply (cons x nil).
  -
   intros y ys.
   case (eqb x y).
@@ -72,12 +72,25 @@ Proof.
    *
     apply go.
     apply ys.
-Save.
+Defined.
 
 Definition add : nat -> set -> set.
 Proof.
  intros x y.
  case y; clear y.
+ fix go 1.
  intros y yH.
  exists (add_inner x y).
+ revert yH.
+ case y; clear y.
+ -
+  intros _.
+  unfold add_inner.
+  unfold uniques.
+  unfold inl.
+  unfold negb.
+  unfold andb.
+  apply is_eq_true.
+ -
+  intros y ys yH.
 Abort.
