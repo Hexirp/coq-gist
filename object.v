@@ -1,82 +1,22 @@
 Require Import Init.
 
-Set Universe Polymorphism.
+(** この定義は出来ない。prodはcoqでのタプル。 *)
+Fail Inductive object (F G : Type -> Type) : Type :=
+| obj_C : (forall A, F A -> G (prod A (object F G))) -> object F G.
 
-Inductive coyoneda (f : Type -> Type) (a : Type) : Type :=
- | mkcoyoneda : forall x, (x -> a) -> f x -> coyoneda f a.
+(** 上記の定義ができない理由を示す。
 
-Definition lift f a : f a -> coyoneda f a.
-Proof.
- intros af.
- apply mkcoyoneda with a.
- -
-  intros A.
-  apply A.
- -
-  apply af.
-Save.
+もしこの型が定義出来てしまうと以下のような関数が書けてしまう。
 
-Definition map f a b : (a -> b) -> coyoneda f a -> coyoneda f b.
-Proof.
- intros ba afCo.
- case afCo.
- intros x ax xf.
- apply mkcoyoneda with x.
- -
-  intros X.
-  apply ba.
-  apply ax.
-  apply X.
- -
-  apply xf.
-Save.
+Definition Ω (x : wrong) : nat :=
+ match x with
+ | wrong_C f => f x
+ end.
 
-Inductive object (f g : Type -> Type) : Type :=
- | mkobj : (forall x, coyoneda f x -> coyoneda g (prod x (object f g))) -> object f g.
+これは停止しない。Coqは停止しない関数を定義することが出来ないように作られているからこれはいけない。
 
-Definition runobj f g a : object f g -> coyoneda f a -> coyoneda g (prod a (object f g)).
-Proof.
- intros gfObj afCo.
- case gfObj.
- intros gfObjRun.
- apply gfObjRun.
- apply afCo.
-Save.
+上記の型に対しても同様で、Gをうまく選ぶとwrongと同様に停止しない関数を定義することが出来てしまう。
 
-Axiom Fix : forall (a : Type), (a -> a) -> a.
-
-Definition compose f g h : object g h -> object f g -> object f h.
-Proof.
- apply Fix.
- intros go hgObj gfObj.
- apply mkobj.
- intros x xfCo.
- apply map with (prod (prod x (object f g)) (object g h)).
- -
-  intros p.
-  case p.
-  intros pl pr.
-  case pl.
-  intros pll plr.
-  split.
-  +
-   apply pll.
-  +
-   apply go.
-   *
-    apply pr.
-   *
-    apply plr.
- -
-  apply runobj.
-  +
-   apply hgObj.
-  +
-   apply runobj.
-   *
-    apply gfObj.
-   *
-    apply xfCo.
-Save.
-
-Print compose.
+*)
+Fail Inductive wrong : Type :=
+| wrong_C : (wrong -> nat) -> wrong.
