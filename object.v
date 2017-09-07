@@ -1,5 +1,7 @@
 Require Import Init.
 
+Open Scope type_scope.
+
 (** この定義は出来ない。prodはcoqでのタプル。 *)
 Fail Inductive object (F G : Type -> Type) : Type :=
 | obj_C : (forall A, F A -> G (prod A (object F G))) -> object F G.
@@ -46,10 +48,37 @@ Defined.
 Module WObject.
  (** coyonedaによる問題の解決 *)
  Inductive object (F G : Type -> Type) : Type :=
- | object_C : (forall A, F A -> coyoneda G (A * object F G)) -> object F G.
+ | object_C : (forall A, coyoneda F A -> coyoneda G (A * object F G)) -> object F G.
 
- Definition object_run F G A : object F G -> F A -> coyoneda G (A * object F G).
+ (** 合成が定義できない理由を示す。
+
+ まず、この関数は妥協している。本当はこれをfix(Haskellでの)を使ったりして完成させたいのだが、
+ 出来ないようだ。
+
+ さらにこの妥協の産物でさえ型の再帰が含まれるせいなのかUniverse Polymorphismが必要である。
+ *)
+ Definition object_compose_F F G H
+  : (object F G -> object G H -> object F H) -> object F G -> object G H -> object F H.
  Proof.
-  intros [f].
-  apply f.
- Defined.
+  intros k [x] [y].
+  apply object_C.
+  intros A z.
+  apply coyoneda_map with ((A * object F G) * object G H).
+  -
+   intros [[a m] n].
+   split.
+   +
+    apply a.
+   +
+    apply k.
+    *
+     apply m.
+    *
+     apply n.
+  -
+   Fail apply y.
+(* apply x.
+   apply z.
+  Defined. *)
+  Abort.
+End WObject.
