@@ -11,11 +11,8 @@ Definition closed := lambda 0.
 
 Definition lambda_bet : forall n, lambda (S n) -> lambda n -> lambda n.
 Proof.
- intros n.
- case n.
- -
-  intros x y.
-  Abort.
+ intros n x y.
+ inversion x.
 
 Definition lambda_app : forall n, lambda n -> lambda n -> lambda n.
 Proof.

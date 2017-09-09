@@ -82,3 +82,17 @@ Module WObject.
   Defined. *)
   Abort.
 End WObject.
+
+(** 上で示した問題の解決策を示す。
+
+上で示した問題はobjectに限らず、mealy machineでも発生する。その解決策としてStreamを使うことが出来る。 *)
+CoInductive stream (A : Type) : Type :=
+| s_cons : A -> stream A -> stream A.
+
+(** objectに対するメッセージの列 *)
+CoInductive messages (F : Type -> Type) : stream Type -> Type :=
+| m_cons : forall (A : Type) (AS : stream Type),
+           coyoneda F (A * messages F AS) -> messages F (s_cons Type A AS).
+
+(** このようにobjectは定義される *)
+Definition object F G S := messages F S -> messages G S.
