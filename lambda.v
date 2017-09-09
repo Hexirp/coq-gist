@@ -9,34 +9,13 @@ Inductive lambda : nat -> Type :=
 
 Definition closed := lambda 0.
 
-Definition lambda_bet : forall n, lambda n -> lambda (S n).
+Definition lambda_bet : forall n, lambda (S n) -> lambda n -> lambda n.
 Proof.
- apply (lambda_rect (fun n _ => lambda (S n))).
+ intros n.
+ case n.
  -
-  intros n x_var.
-  apply var.
-  revert n x_var.
-  apply (fin_rect (fun n _ => fin (S n))).
-  +
-   intros n.
-   apply fin_S.
-   apply fin_O.
-  +
-   intros n _ x_var.
-   apply fin_S.
-   apply x_var.
- -
-  intros n _ x_abs.
-  apply abs.
-  apply x_abs.
- -
-  intros n _ x_app_1 _ x_app_2.
-  apply app.
-  +
-   apply x_app_1.
-  +
-   apply x_app_2.
-Defined.
+  intros x y.
+  Abort.
 
 Definition lambda_app : forall n, lambda n -> lambda n -> lambda n.
 Proof.
