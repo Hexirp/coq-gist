@@ -18,6 +18,13 @@ Proof.
  apply eq_refl.
 Qed.
 
+Definition lambda_bet_lemma_S : forall m n, S m = S n -> m = n.
+Proof.
+ apply (nat_ind (fun m => forall n, S m = S n -> m = n)).
+ -
+  intros n h.
+  Abort.
+
 Definition lambda_bet : forall n, lambda (S n) -> lambda n -> lambda n.
 Proof.
  intros n.
