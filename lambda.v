@@ -10,7 +10,7 @@ Inductive lambda : nat -> Type :=
 Definition closed := lambda 0.
 
 Definition lambda_bet_lemma_eq
- : forall (P: nat -> Prop) (n : nat), (forall (m : nat), m = S n -> P m) -> P (S n).
+ : forall (P: nat -> Type) (n : nat), (forall (m : nat), m = S n -> P m) -> P (S n).
 Proof.
  intros P n h.
  apply h.
@@ -20,9 +20,14 @@ Qed.
 
 Definition lambda_bet : forall n, lambda (S n) -> lambda n -> lambda n.
 Proof.
- intros n x y.
- inversion x.
- Abort.
+ intros n.
+ apply (lambda_bet_lemma_eq (fun n' => lambda n' -> lambda n -> lambda n)).
+ intros m h x y.
+ revert m x h y.
+ apply (lambda_rect (fun o _ => o = S n -> lambda n -> lambda n)).
+ -
+  intros m x_var h y.
+  Abort.
 
 Definition lambda_app : forall n, lambda n -> lambda n -> lambda n.
 Proof.
