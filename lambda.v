@@ -20,10 +20,8 @@ Qed.
 
 Definition lambda_bet_lemma_S : forall m n, S m = S n -> m = n.
 Proof.
- apply (nat_ind (fun m => forall n, S m = S n -> m = n)).
- -
-  intros n h.
-  Abort.
+ apply eq_add_S.
+Qed.
 
 Definition lambda_bet : forall n, lambda (S n) -> lambda n -> lambda n.
 Proof.
@@ -33,7 +31,23 @@ Proof.
  revert m x h y.
  apply (lambda_rect (fun o _ => o = S n -> lambda n -> lambda n)).
  -
-  intros m x_var h y.
+  intros m x_var h.
+  replace n with m.
+  +
+   clear n h.
+   revert m x_var.
+   apply (fin_rect (fun m _ => lambda m -> lambda m)).
+   *
+    intros n y.
+    apply y.
+   *
+    intros n x_var _ _.
+    apply var.
+    apply x_var.
+  +
+   apply eq_add_S.
+   apply h.
+ -
   Abort.
 
 Definition lambda_app : forall n, lambda n -> lambda n -> lambda n.
