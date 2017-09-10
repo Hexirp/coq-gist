@@ -1,0 +1,17 @@
+language: generic
+sudo: false
+dist: trusty
+
+notifications:
+  email: false
+
+addons:
+  apt:
+    packages:
+      - coq
+
+install:
+  - coqc -v
+
+script:
+  - coqc object.v
