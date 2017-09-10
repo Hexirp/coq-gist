@@ -8,10 +8,16 @@ notifications:
 addons:
   apt:
     packages:
-      - coq
+      - opam
 
 install:
-  - coqc -v
+  - export OPAMROOT=~/opam-coq.8.6
+  - opam init -n --comp=4.01.0
+  - opam repo add coq-released http://coq.inria.fr/opam/released
+  - opam install coq.8.6 && opam pin add coq 8.6
+
+  - eval `opam config env`
 
 script:
+  - coqc -v
   - coqc object.v
