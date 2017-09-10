@@ -18,11 +18,6 @@ Proof.
  apply eq_refl.
 Qed.
 
-Definition lambda_bet_lemma_S : forall m n, S m = S n -> m = n.
-Proof.
- apply eq_add_S.
-Qed.
-
 Definition lambda_bet : forall n, lambda (S n) -> lambda n -> lambda n.
 Proof.
  intros n.
