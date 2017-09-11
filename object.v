@@ -96,3 +96,4 @@ CoInductive messages (F : Type -> Type) : stream Type -> Type :=
 
 (** このようにobjectは定義される *)
 Definition object F G S := messages F S -> messages G S.
+

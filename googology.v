@@ -1,34 +1,42 @@
 Require Import Init.
 
-(** * 前提 *)
+(** 全ての関数はこのような型を取る *)
+Definition from (a : Type) := a -> nat.
 
-Definition gen (a : Type) := a -> nat.
+(** おそらく最小の関数 *)
+Definition null : from nat := fun _ => O.
 
-(** * 関数群 *)
+(** nullを一般化する。 *)
+Definition const (n : nat) : from nat := fun _ => n.
 
-Definition null : gen nat := fun _ => O.
+(** 恒等関数 *)
+Definition idfunc : from nat := fun x => x.
 
-Definition const (n : nat) : gen nat := fun _ => n.
+(** 後者関数 *)
+Definition succ : from nat := fun x => S x.
 
-Definition idea : gen nat := fun x => x.
-Definition succ : gen nat := fun x => S x.
-
-Fixpoint plus (n : nat) : gen nat :=
+(** 加算 *)
+Fixpoint plus (n : nat) : from nat :=
  match n with
- | O => idea
- | S n' => fun n => S (plus n' n)
+ | O => idfunc
+ | S n' => fun n => succ (plus n' n)
  end.
 
-Definition dual : gen nat := fun n => plus n n.
-Definition trip : gen nat := fun n => plus n (plus n n).
+(** 二倍する *)
+Definition dual : from nat := fun n => plus n n.
 
-Fixpoint mult (n : nat) : gen nat :=
+(** 三倍する *)
+Definition trip : from nat := fun n => plus n (plus n n).
+
+(** 乗算 *)
+Fixpoint mult (n : nat) : from nat :=
  match n with
  | O => null
  | S n' => fun n => plus n (mult n' n)
  end.
 
-Fixpoint hype (n : nat) : gen (gen nat) :=
+(** ハイパー演算子 *)
+Fixpoint hype (n : nat) : from (from nat) :=
  match n with
  | O => fun f => f O
  | S n' => fun f => f (hype n' f)
