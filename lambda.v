@@ -94,6 +94,20 @@ Proof.
    apply y.
 Defined.
 
+Definition beta : forall n, lambda' (S n) -> lambda' n -> lambda' n.
+Proof.
+ fix go 2.
+ intros n x y.
+ case x; clear x.
+ -
+  intros m h fm.
+  apply eq_rect with m.
+  +
+   revert m h fm.
+   fix fo 2.
+   intros m fm.
+   
+
 Definition lambda_b_s_case_var : forall n, fin n -> lambda n -> lambda n.
 Proof.
  intros n f y.
