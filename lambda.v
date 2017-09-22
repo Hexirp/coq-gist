@@ -40,6 +40,60 @@ Inductive lambda : nat -> Type :=
 | abs : forall n, lambda (S n) -> lambda n
 | app : forall n, lambda n -> lambda n -> lambda n.
 
+Inductive lambda' (n : nat) : Type :=
+| var' : forall (m : nat), S m = n -> fin' m -> lambda' n
+| abs' : lambda' (S n) -> lambda' n
+| app' : lambda' n -> lambda' n -> lambda' n.
+
+Definition lambda_to : forall n, lambda n -> lambda' n.
+Proof.
+ apply lambda_rect.
+ -
+  intros n x.
+  apply var' with n.
+  +
+   apply eq_refl.
+  +
+   apply fin_to.
+   apply x.
+ -
+  intros n _ x.
+  apply abs'.
+  apply x.
+ -
+  intros n _ x _ y.
+  apply app'.
+  +
+   apply x.
+  +
+   apply y.
+Defined.
+
+Definition lambda'_to : forall n, lambda' n -> lambda n.
+Proof.
+ apply lambda'_rect.
+ -
+  intros n m h x.
+  apply eq_rect with (S m).
+  +
+   apply var.
+   apply fin'_to.
+   apply x.
+  +
+   apply h.
+ -
+  intros n _ x.
+  apply abs.
+  apply x.
+ -
+  intros n _ x _ y.
+  apply app.
+  +
+   apply x.
+  +
+   apply y.
+Defined.
+
 Definition lambda_b_s_case_var : forall n, fin n -> lambda n -> lambda n.
 Proof.
  intros n f y.
