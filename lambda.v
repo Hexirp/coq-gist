@@ -20,6 +20,21 @@ Proof.
    apply x.
 Defined.
 
+Definition fin'_to : forall (n : nat), fin' n -> fin n.
+Proof.
+ apply fin'_rect.
+ -
+  apply fin_O.
+ -
+  intros n m h _ x.
+  apply eq_rect with (S m).
+  +
+   apply fin_S.
+   apply x.
+  +
+   apply h.
+Defined.
+
 Inductive lambda : nat -> Type :=
 | var : forall n, fin n -> lambda (S n)
 | abs : forall n, lambda (S n) -> lambda n
