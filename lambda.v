@@ -2,6 +2,24 @@ Inductive fin : nat -> Type :=
 | fin_O : forall n, fin n
 | fin_S : forall n, fin n -> fin (S n).
 
+Inductive fin' (n : nat) : Type :=
+| fin_O' : fin' n
+| fin_S' : forall m, S m = n -> fin' m -> fin' n.
+
+Definition fin_to : forall (n : nat), fin n -> fin' n.
+Proof.
+ apply fin_rect.
+ -
+  apply fin_O'.
+ -
+  intros n _ x.
+  apply fin_S' with n.
+  +
+   apply eq_refl.
+  +
+   apply x.
+Defined.
+
 Inductive lambda : nat -> Type :=
 | var : forall n, fin n -> lambda (S n)
 | abs : forall n, lambda (S n) -> lambda n
