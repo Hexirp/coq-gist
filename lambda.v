@@ -94,6 +94,27 @@ Proof.
    apply y.
 Defined.
 
+Definition beta_var : forall n, fin' n -> lambda' n -> lambda' n.
+Proof.
+ intros n fn x.
+ case fn; clear fn.
+ -
+  apply x.
+ -
+  intros m h fm.
+  apply eq_rect with (S m).
+  +
+   apply var' with m.
+   *
+    apply eq_refl.
+   *
+    apply fm.
+  +
+   apply h.
+Defined.
+
+Print beta_var.
+
 Definition beta : forall n, lambda' (S n) -> lambda' n -> lambda' n.
 Proof.
  fix go 2.
