@@ -159,7 +159,26 @@ Proof.
    apply f_equal.
    apply h.
   +
-   
+   apply beta_abs_var.
+   *
+    apply m.
+   *
+    apply fo.
+ -
+  intros x.
+  apply abs'.
+  apply go.
+  apply x.
+ -
+  intros x y.
+  apply app'.
+  +
+   apply go.
+   apply x.
+  +
+   apply go.
+   apply x.
+Defined.
 
 Definition beta : forall n, lambda' (S n) -> lambda' n -> lambda' n.
 Proof.
