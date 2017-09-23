@@ -113,6 +113,10 @@ Proof.
    apply h.
 Defined.
 
+Definition beta_abs : forall n, lambda' n -> lambda (S n).
+Proof.
+ fix go 2.
+
 Definition beta : forall n, lambda' (S n) -> lambda' n -> lambda' n.
 Proof.
  fix go 2.
