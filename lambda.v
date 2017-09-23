@@ -113,6 +113,40 @@ Proof.
    apply h.
 Defined.
 
+Definition beta_abs_var : nat -> forall n, fin' n -> fin' (S n).
+Proof.
+ fix go 3.
+ intros m n fn.
+ case fn; clear fn.
+ -
+  apply fin_S' with n.
+  *
+   apply eq_refl.
+  *
+   apply fin_O'.
+ -
+  intros o h x.
+  apply fin_S' with (S o).
+  +
+   apply f_equal.
+   apply h.
+  +
+   case m; clear m.
+   *
+    apply fin_S' with o.
+    --
+     apply eq_refl.
+    --
+     apply x.
+   *
+    intros m.
+    apply go.
+    --
+     apply m.
+    --
+     apply x.
+Defined.
+
 Definition beta_abs (m : nat) : forall n, lambda' n -> lambda' (S n).
 Proof.
  fix go 2.
@@ -151,7 +185,6 @@ Proof.
   +
    apply x.
   +
-   
 
 Definition lambda_b_s_case_var : forall n, fin n -> lambda n -> lambda n.
 Proof.
