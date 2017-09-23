@@ -119,32 +119,31 @@ Proof.
  intros m n fn.
  case fn; clear fn.
  -
-  apply fin_S' with n.
-  *
-   apply eq_refl.
-  *
-   apply fin_O'.
+  apply fin_O'.
  -
   intros o h x.
-  apply fin_S' with (S o).
+  apply fin_S' with n.
   +
-   apply f_equal.
-   apply h.
+   apply eq_refl.
   +
    case m; clear m.
    *
     apply fin_S' with o.
     --
-     apply eq_refl.
+     apply h.
     --
      apply x.
    *
     intros m.
-    apply go.
+    apply eq_rect with (S o).
     --
-     apply m.
+     apply go.
+     ++
+      apply m.
+     ++
+      apply x.
     --
-     apply x.
+     apply h.
 Defined.
 
 Definition beta_abs (m : nat) : forall n, lambda' n -> lambda' (S n).
