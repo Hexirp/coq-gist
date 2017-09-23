@@ -113,9 +113,19 @@ Proof.
    apply h.
 Defined.
 
-Definition beta_abs : forall n, lambda' n -> lambda (S n).
+Definition beta_abs (m : nat) : forall n, lambda' n -> lambda' (S n).
 Proof.
  fix go 2.
+ intros n x.
+ case x; clear x.
+ -
+  intros o h fo.
+  apply var' with (S o).
+  +
+   apply f_equal.
+   apply h.
+  +
+   
 
 Definition beta : forall n, lambda' (S n) -> lambda' n -> lambda' n.
 Proof.
