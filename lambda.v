@@ -204,6 +204,27 @@ Proof.
   +
    apply x.
   +
+   apply beta_abs.
+   *
+    apply n.
+   *
+    apply y.
+ -
+  intros x1 x2.
+  apply app'.
+  +
+   apply go.
+   *
+    apply x1.
+   *
+    apply y.
+  +
+   apply go.
+   *
+    apply x2.
+   *
+    apply y.
+Defined.
 
 Definition lambda_b_s_case_var : forall n, fin n -> lambda n -> lambda n.
 Proof.
