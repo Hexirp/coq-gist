@@ -225,6 +225,11 @@ Proof.
     apply y.
 Defined.
 
+Notation "'λ' x" := (abs' _ x) (at level 75, right associativity).
+Notation "x '$' y" := (app' _ x y) (at level 70, right associativity).
+
+Eval compute in beta 0 (abs' 1 (var' 2 1 eq_refl (fin_O' 1))) (abs' 0 (var' 1 0 eq_refl (fin_O' 0))).
+
 Definition lambda_b_s_case_var : forall n, fin n -> lambda n -> lambda n.
 Proof.
  intros n f y.
