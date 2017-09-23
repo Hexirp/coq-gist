@@ -113,8 +113,6 @@ Proof.
    apply h.
 Defined.
 
-Print beta_var.
-
 Definition beta : forall n, lambda' (S n) -> lambda' n -> lambda' n.
 Proof.
  fix go 2.
@@ -122,12 +120,17 @@ Proof.
  case x; clear x.
  -
   intros m h fm.
-  apply eq_rect with m.
+  apply beta_var.
   +
-   revert m h fm.
-   fix fo 2.
-   intros m fm.
-   
+   apply eq_rect with m.
+   *
+    apply fm.
+   *
+    apply eq_add_S.
+    apply h.
+  +
+   apply y.
+ -
 
 Definition lambda_b_s_case_var : forall n, fin n -> lambda n -> lambda n.
 Proof.
