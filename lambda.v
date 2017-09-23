@@ -131,6 +131,13 @@ Proof.
   +
    apply y.
  -
+  intros x.
+  apply abs'.
+  apply go.
+  +
+   apply x.
+  +
+   
 
 Definition lambda_b_s_case_var : forall n, fin n -> lambda n -> lambda n.
 Proof.
