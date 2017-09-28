@@ -3,17 +3,17 @@ Inductive fin : nat -> Type :=
 | fin_S : forall n, fin n -> fin (S n).
 
 Inductive fin' (n : nat) : Type :=
-| fin_O' : fin' n
-| fin_S' : forall m, S m = n -> fin' m -> fin' n.
+| fin'_O : fin' n
+| fin'_S : forall m, S m = n -> fin' m -> fin' n.
 
 Definition fin_to : forall (n : nat), fin n -> fin' n.
 Proof.
  apply fin_rect.
  -
-  apply fin_O'.
+  apply fin'_O.
  -
   intros n _ x.
-  apply fin_S' with n.
+  apply fin'_S with n.
   +
    apply eq_refl.
   +
@@ -119,16 +119,16 @@ Proof.
  intros m n fn.
  case fn; clear fn.
  -
-  apply fin_O'.
+  apply fin'_O.
  -
   intros o h x.
-  apply fin_S' with n.
+  apply fin'_S with n.
   +
    apply eq_refl.
   +
    case m; clear m.
    *
-    apply fin_S' with o.
+    apply fin'_S with o.
     --
      apply h.
     --
