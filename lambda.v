@@ -6,6 +6,16 @@ Inductive fin' (n : nat) : Type :=
 | fin'_O : fin' n
 | fin'_S : forall m, S m = n -> fin' m -> fin' n.
 
+Definition fin_S' : forall n, fin' n -> fin' (S n).
+Proof.
+ intros n x.
+ apply fin'_S with n.
+ -
+  apply eq_refl.
+ -
+  apply x.
+Defined.
+
 Definition fin_to : forall (n : nat), fin n -> fin' n.
 Proof.
  apply fin_rect.
@@ -13,11 +23,8 @@ Proof.
   apply fin'_O.
  -
   intros n _ x.
-  apply fin'_S with n.
-  +
-   apply eq_refl.
-  +
-   apply x.
+  apply fin_S'.
+  apply x.
 Defined.
 
 Definition fin'_to : forall (n : nat), fin' n -> fin n.
@@ -45,17 +52,24 @@ Inductive lambda' (n : nat) : Type :=
 | abs' : lambda' (S n) -> lambda' n
 | app' : lambda' n -> lambda' n -> lambda' n.
 
+Definition var'' : forall n, fin' n -> lambda' (S n).
+Proof.
+ intros n x.
+ apply var' with n.
+ -
+  apply eq_refl.
+ -
+  apply x.
+Defined.
+
 Definition lambda_to : forall n, lambda n -> lambda' n.
 Proof.
  apply lambda_rect.
  -
   intros n x.
-  apply var' with n.
-  +
-   apply eq_refl.
-  +
-   apply fin_to.
-   apply x.
+  apply var''.
+  apply fin_to.
+  apply x.
  -
   intros n _ x.
   apply abs'.
@@ -104,11 +118,8 @@ Proof.
   intros m h fm.
   apply eq_rect with (S m).
   +
-   apply var' with m.
-   *
-    apply eq_refl.
-   *
-    apply fm.
+   apply var''.
+   apply fm.
   +
    apply h.
 Defined.
@@ -122,28 +133,25 @@ Proof.
   apply fin'_O.
  -
   intros o h x.
-  apply fin'_S with n.
+  apply fin_S'.
+  case m; clear m.
   +
-   apply eq_refl.
-  +
-   case m; clear m.
+   apply fin'_S with o.
    *
-    apply fin'_S with o.
+    apply h.
+   *
+     apply x.
+  +
+   intros m.
+   apply eq_rect with (S o).
+   *
+    apply go.
     --
-     apply h.
+     apply m.
     --
      apply x.
    *
-    intros m.
-    apply eq_rect with (S o).
-    --
-     apply go.
-     ++
-      apply m.
-     ++
-      apply x.
-    --
-     apply h.
+    apply h.
 Defined.
 
 Definition beta_abs (m : nat) : forall n, lambda' n -> lambda' (S n).
