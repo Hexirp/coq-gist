@@ -11,27 +11,16 @@ Fixpoint inl (n : nat) (a : list nat) : bool :=
  end
 .
 
-Definition uniques : list nat -> bool.
-Proof.
- fix go 1.
- intros x.
- case x; clear x.
- -
-  apply true.
- -
-  intros x xs.
-  apply andb.
-  +
-   apply negb.
-   apply inl.
-   *
-    apply x.
-   *
-    apply xs.
-  +
-   apply go.
-   apply xs.
-Defined.
+Fixpoint uniques (a : list nat) : bool :=
+ match a with
+ | nil => true
+ | cons x a' =>
+  match inl x a' with
+  | false => uniques a'
+  | true => false
+  end
+ end
+.
 
 Definition set := { x : list nat | eq_true (uniques x) }.
 
