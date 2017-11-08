@@ -30,7 +30,7 @@ Definition add (n : nat) (s : set) : set :=
  match s with
  | exist _ s' p =>
   match inl n s' with
-  | false => undefined set
+  | false => exist _ s' (undefined (eq_true (uniques s')))
   | true => exist _ s' p
   end
  end
