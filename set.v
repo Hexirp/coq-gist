@@ -1,32 +1,15 @@
 Require Import Init Nat.
 
-(*
-Inductive listp A : (A -> listp A -> Prop) -> Type :=
-| nlp : forall P, listp A P
-| cnp : forall P (x : A) (xs : list A), P x xs -> listp A P
-*)
-
-Definition inl : nat -> list nat -> bool.
-Proof.
- intros x.
- fix go 1.
- intros y.
- case y; clear y.
- -
-  apply false.
- -
-  intros y ys.
-  apply orb.
-  +
-   apply eqb.
-   *
-    apply x.
-   *
-    apply y.
-  +
-   apply go.
-   apply ys.
-Defined.
+Fixpoint inl (n : nat) (a : list nat) : bool :=
+ match a with
+ | nil => true
+ | cons x a' =>
+  match eqb n x with
+  | false => inl n a'
+  | true => true
+  end
+ end
+.
 
 Definition uniques : list nat -> bool.
 Proof.
