@@ -1,5 +1,7 @@
 Require Import Init Nat.
 
+Axiom undefined : forall a, a.
+
 Fixpoint inl (n : nat) (a : list nat) : bool :=
  match a with
  | nil => true
@@ -26,6 +28,10 @@ Definition set := { x : list nat | eq_true (uniques x) }.
 
 Definition add (n : nat) (s : set) : set :=
  match s with
- | exist _ s' p => tt
+ | exist _ s' p =>
+  match inl n s' with
+  | false => undefined set
+  | true => exist _ s' p
+  end
  end
 .
