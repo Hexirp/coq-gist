@@ -1,7 +1,5 @@
 Require Import Init Nat.
 
-Axiom undefined : forall a, a.
-
 Fixpoint ninl (n : nat) (a : list nat) : bool :=
  match a with
  | nil => true
@@ -26,7 +24,7 @@ Fixpoint uniques (a : list nat) : bool :=
 
 Definition set := { x : list nat | eq_true (uniques x) }.
 
-Definition new_p (n : nat) (s : list nat) (p : eq_true (uniques s)) (q : eq_true (ninl n s))
+Definition add_uniques (n : nat) (s : list nat) (p : eq_true (uniques s)) (q : eq_true (ninl n s))
     : eq_true (uniques (cons n s)).
 Proof.
  unfold uniques.
@@ -51,7 +49,7 @@ Definition add (n : nat) (s : set) : set :=
  match s with
  | exist _ s' p =>
   if_eq_true (ninl n s')
-   (fun q => exist _ (cons n s') (new_p n s' p q))
+   (fun q => exist _ (cons n s') (add_uniques n s' p q))
    (exist _ s' p)
  end
 .
