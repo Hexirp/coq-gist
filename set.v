@@ -28,6 +28,7 @@ Definition add_uniques (n : nat) (s : list nat) (p : eq_true (uniques s)) (q : e
     : eq_true (uniques (cons n s)).
 Proof.
  unfold uniques.
+ fold (uniques s).
  destruct (ninl n s).
  -
   apply p.
