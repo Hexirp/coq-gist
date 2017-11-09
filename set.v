@@ -30,7 +30,7 @@ Definition new_p (n : nat) (s : list nat) (p : eq_true (uniques s)) (q : eq_true
     : eq_true (uniques (cons n s)) :=
  undefined (eq_true (uniques (cons n s))).
 
-Definition if_eq_true (r : Type) (b : bool) (t : eq_true b -> r) (f : r) : r.
+Definition if_eq_true {r : Type} (b : bool) (t : eq_true b -> r) (f : r) : r.
 Proof.
  destruct b.
  -
@@ -43,9 +43,8 @@ Defined.
 Definition add (n : nat) (s : set) : set :=
  match s with
  | exist _ s' p =>
-  match ninl n s' with
-  | false => exist _ (cons n s') (new_p n s' p (undefined (eq_true (ninl n s'))))
-  | true => exist _ s' p
-  end
+  if_eq_true (ninl n s')
+   (fun q => exist _ (cons n s') (new_p n s' p q))
+   (exist _ s' p)
  end
 .
