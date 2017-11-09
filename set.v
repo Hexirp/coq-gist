@@ -27,8 +27,15 @@ Fixpoint uniques (a : list nat) : bool :=
 Definition set := { x : list nat | eq_true (uniques x) }.
 
 Definition new_p (n : nat) (s : list nat) (p : eq_true (uniques s)) (q : eq_true (ninl n s))
-    : eq_true (uniques (cons n s)) :=
- undefined (eq_true (uniques (cons n s))).
+    : eq_true (uniques (cons n s)).
+Proof.
+ unfold uniques.
+ destruct (ninl n s).
+ -
+  apply p.
+ -
+  apply q.
+Defined.
 
 Definition if_eq_true {r : Type} (b : bool) (t : eq_true b -> r) (f : r) : r.
 Proof.
