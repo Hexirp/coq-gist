@@ -1,6 +1,6 @@
-Module sets.
- Require Import Init Nat.
+Require Import Init Nat.
 
+Module sets.
  Fixpoint ninl (n : nat) (a : list nat) : bool :=
   match a with
   | nil => true
