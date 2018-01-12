@@ -1,119 +1,32 @@
 Require Import Init.
 
-(** 全ての関数はこのような型を取る *)
-Definition from (a : Type) := a -> nat.
+(** 基礎原理
 
-(** シンプルな帰納法 *)
-Definition nat_rect_simple : forall (R : Type), R -> (R -> R) -> nat -> R.
+0 0 0 0 0
+1 1 1 1 1
+2 2 2 2 2
+3 3 3 3 3
+4 4 4 4 4
+
+0 0 0 0 0
+0 1 2 3 4
+0 2 4 6 8
+0 3 6 9 12
+0 4 8 12 16
+
+0 0 0 0 0
+0 1 4 9 16
+0 2 8 18 32
+0 3 12 27 48
+0 4 16 36 64
+
+*)
+
+Definition const (m n : nat) := n.
+
+Definition new (f : nat -> nat -> nat) (m n : nat) := f m (m * n).
+
+Definition example1 : new const 2 2 = 4.
 Proof.
- intros R case_O case_S n.
- apply (nat_rect (fun _ => R)).
- -
-  apply case_O.
- -
-  intros _.
-  apply case_S.
- -
-  apply n.
-Defined.
-
-(** おそらく最小の関数 *)
-Definition null : from nat.
-Proof.
- intros _.
- apply O.
-Defined.
-
-(** nullを一般化する。 *)
-Definition const (n : nat) : from nat.
-Proof.
- intros _.
- apply n.
-Defined.
-
-(** 恒等関数 *)
-Definition id : from nat.
-Proof.
- intros n.
- apply const.
- -
-  apply n.
- -
-  apply n.
-Defined.
-
-(** 後者関数 *)
-Definition succ : from nat.
-Proof.
- intros n.
- apply const.
- -
-  apply S.
-  apply n.
- -
-  apply n.
-Defined.
-
-(** 加算 *)
-Definition plus (n : nat) : from nat.
-Proof.
- revert n.
- apply nat_rect_simple.
- -
-  apply id.
- -
-  intros f n.
-  apply S.
-  apply f.
-  apply n.
-Defined.
-
-(** 二倍する *)
-Definition dual : from nat.
-Proof.
- intros n.
- apply plus.
- -
-  apply n.
- -
-  apply n.
-Defined.
-
-(** 三倍する *)
-Definition trip : from nat.
-Proof.
- intros n.
- apply plus.
- -
-  apply n.
- -
-  apply plus.
-  +
-   apply n.
-  +
-   apply n.
-Defined.
-
-(** 乗算 *)
-Definition mult (n : nat) : from nat.
-Proof.
- revert n.
- apply nat_rect_simple.
- -
-  apply null.
- -
-  intros f n.
-  apply plus.
-  +
-   apply n.
-  +
-   apply f.
-   apply n.
-Defined.
-
-(** ハイパー演算子 *)
-Fixpoint hype (n : nat) : from (from nat) :=
- match n with
- | O => fun f => f O
- | S n' => fun f => f (hype n' f)
- end.
+ apply eq_refl.
+Qed.
