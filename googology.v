@@ -56,7 +56,19 @@ Fixpoint base2 (m n o : nat) {struct m} :=
 2 4 6 8  5 8 11 14  10 14 18 22  17 22 27 32
 3 5 7 9  6 9 12 15  11 15 19 23  18 23 28 33
 
+0 3 6 9   7 11 15 19   18 23 28 33  33 39 45 51
+1 4 7 10  8 12 16 20   19 24 29 34  34 40 46 52
+2 5 8 11  9 13 17 21   20 25 30 35  35 41 47 53
+3 6 9 12  10 14 18 22  21 26 31 36  36 42 48 54
+
 *)
 Definition sq2 (f : nat -> nat -> nat -> nat) (m n o : nat) := f m (m + n) (m + n + o).
 
-Eval cbv in sq2 base2 1 0 0.
+Fixpoint base3 (m n o p : nat) {struct m} :=
+ match m with
+ | O => base2 n o p
+ | S mp => sq2 (base3 mp) n o p
+ end
+.
+
+Eval cbv in base3 2 4 3 0.
