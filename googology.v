@@ -2,31 +2,37 @@ Require Import Init.
 
 (** 基礎原理
 
-0 0 0 0 0
-1 1 1 1 1
-2 2 2 2 2
-3 3 3 3 3
-4 4 4 4 4
-
-0 0 0 0 0
 0 1 2 3 4
-0 2 4 6 8
-0 3 6 9 12
-0 4 8 12 16
+1 2 3 4 5
+2 3 4 5 6
+3 4 5 6 7
+4 5 6 7 8
 
-0 0 0 0 0
-0 1 4 9 16
-0 2 8 18 32
-0 3 12 27 48
-0 4 16 36 64
+0 2 4 6 8
+1 3 5 7 9
+2 4 6 8
+3 5 7 9
+4 6 8
+
+0 3 6 9
+1 4 7
+2 5 8
+3 6 9
+4 7
+
+0 4 8
+1 5 9
+2 6
+3 7
+4 8
 
 *)
 
-Definition const (m n : nat) := n.
+Definition base (m n : nat) := m + n.
 
-Definition new (f : nat -> nat -> nat) (m n : nat) := f m (m * n).
+Definition new (f : nat -> nat -> nat) (m n : nat) := f m (m + n).
 
-Definition example1 : new const 2 2 = 4.
+Definition example1 : new base 2 2 = 6.
 Proof.
  apply eq_refl.
 Qed.
