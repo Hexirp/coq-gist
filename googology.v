@@ -39,8 +39,8 @@ Definition sq (f : nat -> nat -> nat) (m n : nat) := f m (m + n).
 
 Fixpoint base2 (m n o : nat) {struct m} :=
  match m with
- | O => base1 m n
- | S mp => sq (base2 mp) m n
+ | O => base1 n o
+ | S mp => sq (base2 mp) n o
  end
 .
 
@@ -59,4 +59,4 @@ Fixpoint base2 (m n o : nat) {struct m} :=
 *)
 Definition sq2 (f : nat -> nat -> nat -> nat) (m n o : nat) := f m (m + n) (m + n + o).
 
-Eval cbv in base2 1 0 1.
+Eval cbv in sq2 base2 1 0 0.
