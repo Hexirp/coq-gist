@@ -114,7 +114,17 @@ Fixpoint base4 (m n o p q : nat) {struct m} :=
  end
 .
 
-Definition update (m : nat) (n : nats m) := .
+Inductive nats : nat -> Type :=
+| No : nats O
+| Ns : forall n, nat -> nats n -> nats (S n)
+.
+
+Fixpoint update (m : nat) (n : nats m) {struct n} :=
+ match n in nats m' return m = m' -> nats m' with
+ | No => fun _ => No
+ | Ns mp nn np => fun nH => _
+ end (eq_refl m)
+.
 
 Definition spn (f : forall m, nats m -> nat) (m : nat) (n : nats m)
     := f m (update m n)
