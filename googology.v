@@ -27,20 +27,20 @@ Require Import Init.
 4 8
 
 *)
-Fixpoint base1 (m n : nat) {struct m} :=
+Fixpoint base2 (m n : nat) {struct m} :=
  match m with
  | O => n
- | S mp => S (base1 mp n)
+ | S mp => S (base2 mp n)
  end
 .
 
 (** 対角化 *)
-Definition sq (f : nat -> nat -> nat) (m n : nat) := f m (m + n).
+Definition sq2 (f : nat -> nat -> nat) (m n : nat) := f m (m + n).
 
-Fixpoint base2 (m n o : nat) {struct m} :=
+Fixpoint base3 (m n o : nat) {struct m} :=
  match m with
- | O => base1 n o
- | S mp => sq (base2 mp) n o
+ | O => base2 n o
+ | S mp => sq2 (base3 mp) n o
  end
 .
 
@@ -95,12 +95,12 @@ end
 3 4 5 6  4 6 8 10  7 10 13 18  12 16 20 24
 
 *)
-Definition sq2 (f : nat -> nat -> nat -> nat) (m n o : nat) := f m (m + n) (m + n + o).
+Definition sq3 (f : nat -> nat -> nat -> nat) (m n o : nat) := f m (m + n) (m + n + o).
 
-Fixpoint base3 (m n o p : nat) {struct m} :=
+Fixpoint base4 (m n o p : nat) {struct m} :=
  match m with
- | O => base2 n o p
- | S mp => sq2 (base3 mp) n o p
+ | O => base3 n o p
+ | S mp => sq3 (base4 mp) n o p
  end
 .
 
@@ -142,13 +142,13 @@ Fixpoint base3 (m n o p : nat) {struct m} :=
 33 39 45 51  56 63 70 77  87 95 103 111  123 132 141 150
 
 *)
-Definition sq3 (f : nat -> nat -> nat -> nat -> nat) (m n o p : nat)
+Definition sq4 (f : nat -> nat -> nat -> nat -> nat) (m n o p : nat)
     := f m (m + n) (m + n + o) (m + n + o + p).
 
-Fixpoint base4 (m n o p q : nat) {struct m} :=
+Fixpoint base5 (m n o p q : nat) {struct m} :=
  match m with
- | O => base3 n o p q
- | S mp => sq3 (base4 mp) n o p q
+ | O => base4 n o p q
+ | S mp => sq4 (base5 mp) n o p q
  end
 .
 
@@ -158,4 +158,4 @@ Definition l := cons 0 (cons 1 (cons 2 (cons 3 nil))).
 Definition view (f : nat -> nat -> nat -> nat -> nat -> nat) : list (list (list (list (list nat))))
     := map (fun f => map (fun f => map (fun f => map (fun f => map f l) (map f l)) (map f l)) (map f l)) (map f l).
 
-Eval cbv in view base4.
+Eval cbv in view base5.
