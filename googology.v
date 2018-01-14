@@ -114,12 +114,17 @@ Fixpoint base4 (m n o p q : nat) {struct m} :=
  end
 .
 
+Definition update (m : nat) (n : nats m) := .
+
+Definition spn (f : forall m, nats m -> nat) (m : nat) (n : nats m)
+    := f m (update m n)
+
 Require Import List.
 
 Definition l := cons 0 (cons 1 (cons 2 (cons 3 nil))).
 Definition view (f : nat -> nat -> nat) := map (fun f => map f l) (map f l).
 
-Eval cbv in view (fun x y => base4 1 3 3 y x).
+Eval cbv in map (fun n => base4 n n n n n) l.
 (**
 
 4x4の表が4x3の表に並べられている。横x縦であり、大きな方の座標を(n, o)として小さな方の座標を(q, p)とする。
