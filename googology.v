@@ -119,15 +119,46 @@ Inductive nats : nat -> Type :=
 | Ns : forall n, nat -> nats n -> nats (S n)
 .
 
-Fixpoint update (m : nat) (n : nats m) {struct n} :=
- match n in nats m' return m = m' -> nats m' with
- | No => fun _ => No
- | Ns mp nn np => fun nH => _
- end (eq_refl m)
+(**
+
+a
+a + b
+a + b + c
+a + b + c + d
+...
+
+=
+
+a
+
+(a + b)
+(a + b) + c
+(a + b) + c + d
+
+*)
+Fixpoint update (m : nat) (n : nat) (p : nats m) {struct p} : nats m :=
+ match p in nats m' return nats m' with
+ | No => No
+ | Ns mp pn pp => Ns mp (n + pn) (update mp (n + pn) pp)
+ end
 .
 
-Definition spn (f : forall m, nats m -> nat) (m : nat) (n : nats m)
-    := f m (update m n)
+Eval cbv in update 3 1 (Ns 2 1 (Ns 1 1 (Ns 0 1 No))).
+
+Definition spn (m : nat) (f : nats m -> nat) (n : nats m) := f (update m O n).
+
+Fixpoint basen (m : nat) (n : nat) (p : nats m) {struct n} :=
+ match n with
+ | O => match p with
+  | No => O
+  | Ns mp pn pp => match pp with
+   | No => S pn
+   | Ns mpp ppn ppp => basen (S mpp) pn (Ns mpp ppn ppp)
+   end
+  end
+ | S np => spn m (basen m np) p
+ end
+.
 
 Require Import List.
 
