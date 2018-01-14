@@ -152,73 +152,10 @@ Fixpoint base4 (m n o p q : nat) {struct m} :=
  end
 .
 
-Inductive nats : nat -> Type :=
-| No : nats O
-| Ns : forall n, nat -> nats n -> nats (S n)
-.
-
-(**
-
-a
-a + b
-a + b + c
-a + b + c + d
-...
-
-=
-
-a
-
-(a + b)
-(a + b) + c
-(a + b) + c + d
-
-*)
-Fixpoint update (m : nat) (n : nat) (p : nats m) {struct p} : nats m :=
- match p in nats m' return nats m' with
- | No => No
- | Ns mp pn pp => Ns mp (n + pn) (update mp (n + pn) pp)
- end
-.
-
-Eval cbv in update 3 1 (Ns 2 1 (Ns 1 1 (Ns 0 1 No))).
-
-Definition spn (m : nat) (f : nats m -> nat) (n : nats m) := f (update m O n).
-
-(**
-
-f = 0
-f 0 = 1
-f 1 = 2
-
-f 3 4 = 3 + 4
-f 4 2 = 4 + 2
-
-f 0 3 4 = 3 + 4
-f 1 3 4 = 3 + (3 + 4)
-f 2 3 4 = 3 + (3 + (3 + 4))
-
-f 0 3 4 5 = f 3 4 5
-f 1 3 4 5 = f 3 (3 + 4) (3 + 4 + 5)
-f 2 3 4 5 = f 3 (3 + (3 + 4)) (3 + (3 + 4) + (3 + 4 + 5))
-
-*)
-Fixpoint basen (m : nat) (n : nat) (p : nats m) {struct n} :=
- match n with
- | O => match p with
-  | No => O
-  | Ns mp pn pp => match pp with
-   | No => S pn
-   | Ns mpp ppn ppp => basen (S mpp) pn (Ns mpp ppn ppp)
-   end
-  end
- | S np => spn m (basen m np) p
- end
-.
-
 Require Import List.
 
 Definition l := cons 0 (cons 1 (cons 2 (cons 3 nil))).
-Definition view (f : nat -> nat -> nat) := map (fun f => map f l) (map f l).
+Definition view (f : nat -> nat -> nat -> nat -> nat -> nat) : list (list (list (list (list nat))))
+    := map (fun f => map (fun f => map (fun f => map (fun f => map f l) (map f l)) (map f l)) (map f l)) (map f l).
 
-Eval cbv in map (fun n => base4 n n n n n) l.
+Eval cbv in view base4.
