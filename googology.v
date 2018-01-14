@@ -11,7 +11,7 @@ Fixpoint base1 (m : nat) {struct m} : nat :=
  end
 .
 
-Definition sq1 (f : nat -> nat) (m : nat) : nat := S (f m).
+Definition sq1 (f : nat -> nat) (m : nat) : nat := f (S m).
 
 (** 基礎原理
 
@@ -168,7 +168,6 @@ Fixpoint base5 (m n o p q : nat) {struct m} : nat :=
 Require Import List.
 
 Definition l : list nat := cons 0 (cons 1 (cons 2 (cons 3 nil))).
-Definition view (f : nat -> nat -> nat -> nat -> nat -> nat) : list (list (list (list (list nat))))
-    := map (fun f => map (fun f => map (fun f => map (fun f => map f l) (map f l)) (map f l)) (map f l)) (map f l).
+Definition view (f : nat -> nat -> nat) : list (list nat) := map (fun f => map f l) (map f l).
 
-Eval cbv in view base5.
+Eval cbv in view (base5 0 0 0).
