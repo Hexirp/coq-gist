@@ -1,6 +1,15 @@
 Require Import Init.
 
-Definition base1 (m : nat) : nat := m.
+Definition base0 : nat := O.
+
+Definition sq0 (f : nat) := S f.
+
+Fixpoint base1 (m : nat) {struct m} : nat := 
+ match m with
+ | O => base0
+ | S mp => sq0 (base1 mp)
+ end
+.
 
 Definition sq1 (f : nat -> nat) (m : nat) : nat := S (f m).
 
