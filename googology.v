@@ -1,5 +1,9 @@
 Require Import Init.
 
+Definition base1 (m : nat) : nat := m.
+
+Definition sq1 (f : nat -> nat) (m : nat) : nat := S (f m).
+
 (** 基礎原理
 
 0 1 2 3 4
@@ -29,8 +33,8 @@ Require Import Init.
 *)
 Fixpoint base2 (m n : nat) {struct m} : nat :=
  match m with
- | O => n
- | S mp => S (base2 mp n)
+ | O => base1 n
+ | S mp => sq1 (base2 mp) n
  end
 .
 
