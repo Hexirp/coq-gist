@@ -47,10 +47,7 @@ Defined excluded_middle_to_peirce.
 
 excluded_middle_to_peirceの証明を見ると引数exmiにpを渡している。
 exmi p : p \/ ~ pとなり、一般のexmiがなくてもこれだけあればよいことになる。
-
-同様にpeirce_to_excluded_middleの証明を見ると引数peirceにa \/ ~ aとFalseを渡している。
-peirce (a \/ ~ a) False : (((a \/ ~ a) -> False) -> (a \/ ~ a)) -> (a \/ ~ a)となる。
-一般のpeirceがなくてもこれだけあればよいことになる。
+こうして置き換えたものはちょうど最初に与えた式に一致する。
 
 *)
 
