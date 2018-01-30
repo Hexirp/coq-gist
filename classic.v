@@ -53,3 +53,13 @@ peirce (a \/ ~ a) False : (((a \/ ~ a) -> False) -> (a \/ ~ a)) -> (a \/ ~ a)と
 一般のpeirceがなくてもこれだけあればよいことになる。
 
 *)
+
+(*
+
+Thank
+
+https://github.com/suharahiromichi/coq/blob/2aedd465c255a6aac1466258041d4930211460d9/coq_classical.v
+
+.
+
+*)
