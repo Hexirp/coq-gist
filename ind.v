@@ -1,29 +1,70 @@
-Require Import Init Basics.
+Require Import Init.
 
-Section category.
- Variable Cat : Type -> Type -> Type.
- Variable A : Type.
+Inductive path (A : Type) (a : A) : A -> Type :=
+| idpath : path A a a
+.
 
- Inductive cat : Type -> Type :=
- | idarrow : cat A
- | compose : forall B X, Cat X B -> cat X -> cat B.
-
- Definition cat_rect_simple (P : Type -> Type)
-  : P A -> (forall (B X : Type), Cat X B -> P X -> P B) -> (forall (T : Type), cat T -> P T).
- Proof.
-  intros.
-  apply (cat_rect (fun x => fun _ => P x)).
-  -
-   apply X.
-  -
-   intros.
-   apply X0 with X2.
-   +
-    apply c.
-   +
-    apply X3.
-  -
-   apply X1.
- Defined.
-
- Print cat_rect_simple.
+Definition bool_idempotence (f : bool -> bool) (x : bool) : path bool (f (f (f x))) (f x).
+Proof.
+ refine (match x with true => _ | false => _ end); clear x.
+ -
+  refine (_ (idpath bool (f true))).
+  refine (
+   match f true as f' return path bool f' (f true) -> path bool (f (f f')) f' with
+   | true => _
+   | false => _
+   end
+  ).
+  +
+   refine (fun p => _).
+   refine (match p with idpath _ _ => _ end).
+   refine (match p with idpath _ _ => _ end).
+   refine (idpath bool true).
+  +
+   refine (fun p => _).
+   refine (_ (idpath bool (f false))).
+   refine (
+    match f false as f' return path bool f' (f false) -> path bool (f f') false with
+    | true => _
+    | false => _
+    end
+   ).
+   *
+    refine (fun q => _).
+    refine (match p with idpath _ _ => _ end).
+    refine (idpath bool false).
+   *
+    refine (fun q => _).
+    refine (match q with idpath _ _ => _ end).
+    refine (idpath bool false).
+ -
+  refine (_ (idpath bool (f false))).
+  refine (
+   match f false as f' return path bool f' (f false) -> path bool (f (f f')) f' with
+   | true => _
+   | false => _
+   end
+  ).
+  +
+   refine (fun p => _).
+   refine (_ (idpath bool (f true))).
+   refine (
+    match f true as f' return path bool f' (f true) -> path bool (f f') true with
+    | true => _
+    | false => _
+    end
+   ).
+   *
+    refine (fun q => _).
+    refine (match q with idpath _ _ => _ end).
+    refine (idpath bool true).
+   *
+    refine (fun q => _).
+    refine (match p with idpath _ _ => _ end).
+    refine (idpath bool true).
+  +
+   refine (fun p => _).
+   refine (match p with idpath _ _ => _ end).
+   refine (match p with idpath _ _ => _ end).
+   refine (idpath bool false).
+Defined.
