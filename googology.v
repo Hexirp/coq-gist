@@ -25,3 +25,9 @@ Definition compose {A B C} : (B -> C) -> (A -> B) -> A -> C := fun f g x => f (g
 Definition f010 := compose S f01.
 
 Definition f0100 := compose S f010.
+
+Definition f0101 := ind (nat -> nat) f01 (compose S).
+
+Definition f01010 := compose (compose S) f0101.
+
+Definition f010100 := compose (compose S) f01010.
