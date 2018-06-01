@@ -21,6 +21,14 @@ Proof.
  apply idpath.
 Defined.
 
+Definition dep_paths_fun {A B : Type} {x y : A} (p : x = y) (f : A -> B)
+    : dep_paths (fun _ => B) p (f x) (f y).
+Proof.
+ destruct p as [].
+ cbv.
+ apply idpath.
+Defined.
+
 Definition apD {A : Type} (P : A -> Type) (f : forall a : A, P a) {x y : A} (p : x = y)
     : dep_paths P p (f x) (f y).
 Proof.
@@ -70,52 +78,75 @@ End II_elim.
 
 Definition II_rec (A : Type) := II_ind (fun _ => A).
 
-Definition Path (A : Type) (x y : A) : Type.
+Inductive Path (A : Type) (x y : A) : Type :=
+| mkPath : forall f : II -> A, f st = x -> f en = y -> Path A x y
+.
+
+Definition idPath_internal (A : Type) (a : A) : II -> A.
 Proof.
- refine (forall P : Type, (forall f : II -> A, f st = x -> f en = y -> P) -> P).
+ apply II_rec with a a.
+ apply dep_paths_const.
 Defined.
 
 Definition idPath (A : Type) (a : A) : Path A a a.
 Proof.
- cbv.
- intros P c_Path.
- refine (let f := II_rec A a a (dep_paths_const seg a) : II -> A in _).
- apply c_Path with f.
+ apply mkPath with (idPath_internal A a).
  -
   cbv.
   apply idpath.
  -
   cbv.
   apply idpath.
+Defined.
+
+Definition apPath {A : Type} {x y : A} : Path A x y -> II -> A.
+Proof.
+ intros p.
+ destruct p as [pi pi_st pi_en].
+ apply pi.
 Defined.
 
 Definition stPath (A : Type) (x y : A) (p : Path A x y) : A.
 Proof.
- apply p.
- intros f f_st f_en.
- apply (f st).
+ destruct p as [pi pi_st pi_en].
+ apply (pi st).
 Defined.
 
 Definition enPath (A : Type) (x y : A) (p : Path A x y) : A.
 Proof.
- apply p.
- intros f f_st f_en.
- apply (f en).
+ destruct p as [pi pi_st pi_en].
+ apply (pi en).
 Defined.
 
 Definition eq_stPath (A : Type) (x y : A) (p : Path A x y) : stPath A x y p = x.
 Proof.
-Admitted.
+ destruct p as [pi pi_st pi_en].
+ cbv.
+ apply pi_st.
+Defined.
 
 Definition eq_enPath (A : Type) (x y : A) (p : Path A x y) : enPath A x y p = y.
 Proof.
-Admitted.
+ destruct p as [pi pi_st pi_en].
+ cbv.
+ apply pi_en.
+Defined.
+
+Definition funext_internal {A B : Type} (f g : A -> B) (p : forall x : A, Path B (f x) (g x))
+    : II -> (A -> B).
+Proof.
+ refine (
+  II_rec (A -> B)
+   (fun x => apPath (p x) st)
+   (fun x => apPath (p x) en)
+   _
+ ).
+ apply (dep_paths_fun seg (fun i : II => fun x : A => apPath (p x) i)).
+Defined.
 
 Definition funext {A B : Type} (f g : A -> B) (p : forall x : A, Path B (f x) (g x))
     : Path (A -> B) f g.
 Proof.
- intros P c_Path.
- assert (pi : II -> A -> B).
+ apply mkPath with (funext_internal f g p).
  -
-  refine (II_rec (A -> B) (fun x : A => stPath  _ _).
-  
+  cbv.
