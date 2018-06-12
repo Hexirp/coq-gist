@@ -1,3 +1,5 @@
+(* https://x80.org/rhino-hott/ でチェックした *)
+
 From HoTT Require Import Basics.
 From HoTT Require Import Types.
 From HoTT Require Import HProp TruncType.
