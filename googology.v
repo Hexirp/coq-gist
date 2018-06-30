@@ -49,3 +49,54 @@ Definition f01010 : t00 := s00 f0101.
 
 Definition f010100 : t00 := s00 f01010.
 
+Definition c0 {A : nat -> Type} : (forall n, A n -> A n) -> (forall n, A n) -> (forall n, A n).
+Proof.
+ intros f g x.
+ apply f.
+ apply g.
+Defined.
+
+Definition i0 {A : nat -> Type} : A O -> (forall n, A n -> A (S n)) -> forall n, A n.
+Proof.
+ intros x f.
+ fix i0 1.
+ intros [ | np ].
+ -
+  apply x.
+ -
+  apply f.
+  apply i0.
+Defined.
+
+Definition w : nat -> Type := i v u.
+
+Definition t01 : Type := forall n, w n.
+
+Definition r : forall n, w n -> w n.
+Proof.
+ apply (@i0 (fun n => w n -> w n)).
+ -
+  apply S.
+ -
+  intros n.
+  change ((w n -> w n) -> (nat -> w n) -> (nat -> w n)).
+  apply c.
+Defined.
+
+Definition s01 : t01 -> t01 := c0 r.
+
+Definition o01 : t01.
+Proof.
+ change (forall n, w n).
+ apply i0.
+ -
+  apply O.
+ -
+  intros n p.
+  change (nat -> w n).
+  apply i.
+  +
+   apply p.
+  +
+   apply r.
+Defined.
