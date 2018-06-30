@@ -1,5 +1,9 @@
 Require Import Coq.Init.Prelude.
 
+Definition u : Type -> Type := fun A => nat -> A.
+
+Definition v : Type := nat.
+
 Definition c {A : Type} : (A -> A) -> (nat -> A) -> (nat -> A) := fun f g x => f (g x).
 
 Definition i {A : Type} : A -> (A -> A) -> (nat -> A) := fun x f => fix i n :=
@@ -9,7 +13,7 @@ Definition i {A : Type} : A -> (A -> A) -> (nat -> A) := fun x f => fix i n :=
  end
 .
 
-Definition t : Type := nat.
+Definition t : Type := v.
 
 Definition s : t -> t := S.
 
@@ -21,7 +25,7 @@ Definition f0 : t := s f.
 
 Definition f00 :t := s f.
 
-Definition t0 : Type := nat -> nat.
+Definition t0 : Type := u t.
 
 Definition s0 : t0 -> t0 := c s.
 
@@ -33,7 +37,7 @@ Definition f010 : t0 := s0 f01.
 
 Definition f0100 : t0 := s0 f010.
 
-Definition t00 : Type := nat -> nat -> nat.
+Definition t00 : Type := u t0.
 
 Definition s00 : t00 -> t00 := c s0.
 
