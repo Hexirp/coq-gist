@@ -168,6 +168,18 @@ Defined.
 
 Definition t011 : Type := forall n, w01 n.
 
+Definition q {A : Type} : (A -> A) -> (forall m, i A u m -> i A u m).
+Proof.
+ intros f.
+ apply (@i0 (fun m => i A u m -> i A u m)).
+ -
+  apply f.
+ -
+  intros n.
+  change ((i A u n -> i A u n) -> (nat -> i A u n) -> (nat -> i A u n)).
+  apply c.
+Defined.
+
 Definition r01 : forall n, w01 n -> w01 n.
 Proof.
  apply (@i0 (fun n => w01 n -> w01 n)).
@@ -176,4 +188,10 @@ Proof.
  -
   intros n.
   change ((w01 n -> w01 n) -> (forall m, i (w01 n) u m) -> forall m, i (w01 n) u m).
-  
+  intros f g x.
+  apply q.
+  +
+   apply f.
+  +
+   apply g.
+Defined.
