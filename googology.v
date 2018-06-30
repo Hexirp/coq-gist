@@ -100,3 +100,80 @@ Proof.
   +
    apply r.
 Defined.
+
+Definition f011 : t01 := o01.
+
+Definition f0110 : t01 := s01 f011.
+
+Definition f01100 : t01 := s01 f0110.
+
+Definition t010 : Type := u t01.
+
+Definition s010 : t010 -> t010 := c s01.
+
+Definition o010 : t010 := i o01 s01.
+
+Definition f01101 : t010 := o010.
+
+Definition f011010 : t010 := s010 f01101.
+
+Definition f0110100 : t010 := s010 f011010.
+
+Definition w0 : nat -> Type := i t01 u.
+
+Definition t0101 : Type := forall n, w0 n.
+
+Definition r0 : forall n, w0 n -> w0 n.
+Proof.
+ apply (@i0 (fun n => w0 n -> w0 n)).
+ -
+  apply s01.
+ -
+  intros n.
+  change ((w0 n -> w0 n) -> (nat -> w0 n) -> (nat -> w0 n)).
+  apply c.
+Defined.
+
+Definition s0101 : t0101 -> t0101 := c0 r0.
+
+Definition o0101 : t0101.
+Proof.
+ change (forall n, w0 n).
+ apply i0.
+ -
+  apply o01.
+ -
+  intros n p.
+  change (nat -> w0 n).
+  apply i.
+  +
+   apply p.
+  +
+   apply r0.
+Defined.
+
+Definition f011011 : t0101 := o0101.
+
+Definition f0110110 : t0101 := s0101 f011011.
+
+Definition w01 : nat -> Type.
+Proof.
+ apply i.
+ -
+  apply v.
+ -
+  intros p.
+  apply (forall n, i p u n).
+Defined.
+
+Definition t011 : Type := forall n, w01 n.
+
+Definition r01 : forall n, w01 n -> w01 n.
+Proof.
+ apply (@i0 (fun n => w01 n -> w01 n)).
+ -
+  apply S.
+ -
+  intros n.
+  change ((w01 n -> w01 n) -> (forall m, i (w01 n) u m) -> forall m, i (w01 n) u m).
+  
