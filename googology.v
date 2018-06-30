@@ -212,4 +212,11 @@ Proof.
    apply p.
   +
    intros m p'.
-   
+   change (nat -> i (w01 n) u m).
+   apply i.
+   *
+    apply p'.
+   *
+    apply q.
+    apply r01.
+Defined.
