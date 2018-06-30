@@ -195,3 +195,21 @@ Proof.
   +
    apply g.
 Defined.
+
+Definition s011 : t011 -> t011 := c0 r01.
+
+Definition o011 : t011.
+Proof.
+ change (forall n, w01 n).
+ apply i0.
+ -
+  apply O.
+ -
+  intros n p.
+  change (forall m, i (w01 n) u m).
+  apply i0.
+  +
+   apply p.
+  +
+   intros m p'.
+   
