@@ -60,4 +60,29 @@ Module Functor_List <: Functor.
  Qed.
 End Functor_List.
 
+Module Type Monad (Functor_Instance : Functor).
+ Export Functor_Instance.
 
+ Parameter pure : forall a, a -> f a.
+ Parameter join : forall a, f (f a) -> f a.
+ Arguments pure {a} x.
+ Arguments join {a} x.
+
+ Axiom monad_law_1 : forall a, @id (f a) == join o pure.
+ Axiom monad_law_2 : forall a, @id (f a) == join o fmap pure.
+ Axiom monad_law_3 : forall a, @join (f a) o join == join o fmap join.
+End Monad.
+
+Module Free_Lunch (Monad_Instance : Monad Functor_List).
+ Export Monad_Instance.
+
+ Theorem join_nil_to_nil : ~ ~ forall a, @Nil a = join Nil.
+ Proof.
+  intros ng.
+  assert (forall a, exists x xs, @Cons a x xs = join Nil).
+  -
+   intros a.
+   generalize (ng a).
+   destruct (join Nil).
+   +
+    
