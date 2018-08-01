@@ -27,3 +27,37 @@ Module Type Functor.
   fmap f_ o fmap g_ == fmap (f_ o g_).
 End Functor.
 
+Module Functor_List <: Functor.
+ Definition f := List.
+ Definition fmap := @fmap.
+ Arguments fmap {a b} f x.
+
+ Theorem functor_law_1 : forall a, @id (f a) == fmap (@id a).
+ Proof.
+  intros a.
+  intros x.
+  induction x.
+  -
+   apply eq_refl.
+  -
+   simpl.
+   case IHx.
+   apply eq_refl.
+ Qed.
+
+ Theorem functor_law_2 : forall a b c, forall (f_ : b -> c) (g_ : a -> b),
+  fmap f_ o fmap g_ == fmap (f_ o g_).
+ Proof.
+  intros a b c f_ g_.
+  intros x.
+  induction x.
+  -
+   apply eq_refl.
+  -
+   simpl.
+   case IHx.
+   apply eq_refl.
+ Qed.
+End Functor_List.
+
+
