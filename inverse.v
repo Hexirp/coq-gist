@@ -30,3 +30,10 @@ Definition right_inv_rel {A B : Type} (f : A -> B) (g : B -> A) : Prop := inv_re
 Definition right_inv {A B : Type} (f : A -> B) : Prop := ex (right_inv_rel f).
 
 Definition split_epi {A B : Type} (h : A -> B) : Prop := right_inv h /\ epi h.
+
+Definition bi {A B : Type} (f : A -> B) : Prop := mono f /\ epi f.
+
+Definition iso_rel {A B : Type} (f : A -> B) (g : B -> A) : Prop := inv_rel f g /\ inv_rel g f.
+
+Definition iso {A B : Type} (f : A -> B) : Prop := ex (iso_rel f).
+
