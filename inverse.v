@@ -83,3 +83,7 @@ Proof.
  unfold compose in Q.
  apply Q.
 Defined.
+
+(** [f] が右逆射を持つならば [f] は全射である *)
+Definition epi_right_inv {A B : Type} (f : A -> B) : right_inv f -> epi f.
+Proof.
