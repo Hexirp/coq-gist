@@ -76,3 +76,18 @@ Defined.
 (** [f] が右逆射を持つならば [f] は全射である *)
 Definition epi_right_inv {A B : Type} (f : A -> B) : right_inv f -> epi f.
 Proof.
+ intros P.
+ destruct P as [ g P ].
+ unfold right_inv_rel in P.
+ unfold epi.
+ intros C g₁ g₂ Q.
+ unfold pointwise_eq.
+ intros x.
+ change (g₁ (id x) = g₂ (id x)).
+ unfold pointwise_eq in P.
+ rewrite <- P with x.
+ unfold compose.
+ unfold pointwise_eq in Q.
+ unfold compose in Q.
+ apply Q.
+Defined.
