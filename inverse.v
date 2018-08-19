@@ -91,3 +91,21 @@ Proof.
  unfold compose in Q.
  apply Q.
 Defined.
+
+(** [f] が同型射であるのならば [f] は双射である *)
+Definition bi_iso {A B : Type} (f : A -> B) : iso f -> bi f.
+Proof.
+ intros P.
+ destruct P as [ g P ].
+ destruct P as [ left_P right_P ].
+ unfold bi.
+ split.
+ -
+  apply mono_left_inv.
+  exists g.
+  apply left_P.
+ -
+  apply epi_right_inv.
+  exists g.
+  apply right_P.
+Defined.
