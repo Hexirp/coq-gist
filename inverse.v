@@ -5,6 +5,7 @@ Definition pointwise_eq {A B : Type} (f g : A -> B) : Prop := forall x, f x = g 
 
 Notation "f == g" := (pointwise_eq f g) (at level 70, no associativity) : type_scope.
 
+
 (** 恒等射 *)
 Definition id {A : Type} : A -> A := fun x => x.
 
@@ -49,3 +50,14 @@ Definition iso_rel {A B : Type} (f : A -> B) (g : B -> A) : Prop := g o f == id 
 
 (** [f] は同型射である *)
 Definition iso {A B : Type} (f : A -> B) : Prop := ex (iso_rel f).
+
+
+(** [f] が左逆射を持つならば [f] は単射である *)
+Definition mono_left_inv {A B : Type} (f : A -> B) : left_inv f -> mono f.
+Proof.
+ intros P.
+ destruct P as [ g P ].
+ unfold left_inv_rel in P.
+ unfold mono.
+ intros Z g₁ g₂.
+ assert (wiskerL : forall A B C (f g : A -> B) (h : B -> C), f == g -> h o f == h o g).
