@@ -58,7 +58,10 @@ Proof.
  unfold pointwise_eq.
  intros x.
  unfold compose.
- assert (ap : forall A B (x y : A) (f : A -> B), x = y -> f x = f y).
+ apply f_equal.
+ unfold pointwise_eq in P.
+ apply P.
+Defined.
 
 (** [f] が左逆射を持つならば [f] は単射である *)
 Definition mono_left_inv {A B : Type} (f : A -> B) : left_inv f -> mono f.
@@ -67,4 +70,16 @@ Proof.
  destruct P as [ g P ].
  unfold left_inv_rel in P.
  unfold mono.
- intros Z g₁ g₂.
+ intros Z g₁ g₂ Q.
+ unfold pointwise_eq.
+ intros x.
+ change (id (g₁ x) = id (g₂ x)).
+ unfold pointwise_eq in P.
+ rewrite <- P with (g₁ x).
+ rewrite <- P with (g₂ x).
+ unfold compose.
+ apply f_equal.
+ unfold pointwise_eq in Q.
+ unfold compose in Q.
+ apply Q.
+Defined.
