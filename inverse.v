@@ -52,6 +52,14 @@ Definition iso_rel {A B : Type} (f : A -> B) (g : B -> A) : Prop := g o f == id 
 Definition iso {A B : Type} (f : A -> B) : Prop := ex (iso_rel f).
 
 
+Definition wiskerL {A B C : Type} (f g : A -> B) (h : B -> C) : f == g -> h o f == h o g.
+Proof.
+ intros P.
+ unfold pointwise_eq.
+ intros x.
+ unfold compose.
+ assert (ap : forall A B (x y : A) (f : A -> B), x = y -> f x = f y).
+
 (** [f] が左逆射を持つならば [f] は単射である *)
 Definition mono_left_inv {A B : Type} (f : A -> B) : left_inv f -> mono f.
 Proof.
@@ -60,4 +68,3 @@ Proof.
  unfold left_inv_rel in P.
  unfold mono.
  intros Z g₁ g₂.
- assert (wiskerL : forall A B C (f g : A -> B) (h : B -> C), f == g -> h o f == h o g).
