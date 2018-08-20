@@ -94,6 +94,27 @@ Proof.
  apply Q.
 Defined.
 
+(** [f] が同型射であるのならば [f] は左逆射を持ち、右逆射を持つ *)
+Definition left_right_inv_iso {A B : Type} (f : A -> B) : iso f -> left_inv f /\ right_inv f.
+Proof.
+ intros P.
+ unfold iso in P.
+ destruct P as [ g P ].
+ unfold iso_rel in P.
+ destruct P as [ left_P right_P ].
+ split.
+ -
+  unfold left_inv.
+  exists g.
+  unfold left_inv_rel.
+  apply left_P.
+ -
+  unfold right_inv.
+  exists g.
+  unfold right_inv_rel.
+  apply right_P.
+Defined.
+
 (** [f] が同型射であるのならば [f] は双射である *)
 Definition bi_iso {A B : Type} (f : A -> B) : iso f -> bi f.
 Proof.
