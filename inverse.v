@@ -56,6 +56,7 @@ Definition iso {A B : Type} (f : A -> B) : Prop := ex (iso_rel f).
 Definition mono_left_inv {A B : Type} (f : A -> B) : left_inv f -> mono f.
 Proof.
  intros P.
+ unfold left_inv in P.
  destruct P as [ g P ].
  unfold left_inv_rel in P.
  unfold mono.
@@ -77,6 +78,7 @@ Defined.
 Definition epi_right_inv {A B : Type} (f : A -> B) : right_inv f -> epi f.
 Proof.
  intros P.
+ unfold right_inv in P.
  destruct P as [ g P ].
  unfold right_inv_rel in P.
  unfold epi.
@@ -96,16 +98,22 @@ Defined.
 Definition bi_iso {A B : Type} (f : A -> B) : iso f -> bi f.
 Proof.
  intros P.
+ unfold iso in P.
  destruct P as [ g P ].
+ unfold iso_rel in P.
  destruct P as [ left_P right_P ].
  unfold bi.
  split.
  -
   apply mono_left_inv.
+  unfold left_inv.
   exists g.
+  unfold left_inv_rel.
   apply left_P.
  -
   apply epi_right_inv.
+  unfold right_inv.
   exists g.
+  unfold right_inv_rel.
   apply right_P.
 Defined.
