@@ -52,6 +52,19 @@ Definition iso_rel {A B : Type} (f : A -> B) (g : B -> A) : Prop := g o f == id 
 Definition iso {A B : Type} (f : A -> B) : Prop := ex (iso_rel f).
 
 
+(** 左逆射を持つ [f] の、その左逆射／引き込みを得る *)
+Definition retraction {A B : Type} (f : A -> B) (P : left_inv f) : B -> A.
+Proof.
+ (* destruct P as [ g P ]. *)
+Admitted.
+
+(** 右逆射を持つ [f] の、その右逆射／断面を得る *)
+Definition section {A B : Type} (f : A -> B) (P : right_inv f) : B -> A.
+Proof.
+ (* destruct P as [ g P ]. *)
+Admitted.
+
+
 (** [f] が左逆射を持つならば [f] は単射である *)
 Definition mono_left_inv {A B : Type} (f : A -> B) : left_inv f -> mono f.
 Proof.
