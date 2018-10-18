@@ -1,0 +1,1 @@
+Inductive A := a : A.
