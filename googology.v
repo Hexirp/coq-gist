@@ -1,4 +1,4 @@
 Require Import Coq.Init.Prelude.
 
 
-Class FGH (A : Type) := nat -> nat .
+Class FGH (A : Type) := { fgh : nat -> nat } .
