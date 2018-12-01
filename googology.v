@@ -12,6 +12,6 @@ Fixpoint iter {P : Type} (o : P) (s : P -> P) (n : nat) :=
   end
 .
 
-Instance FGH_Succ {A : Type} : FGH (sum unit A) := {
+Instance FGH_Succ {A : Type} `{FGH A} : FGH (sum unit A) := {
   fgh := fun n => iter n (fgh (A := A)) n
 } .
