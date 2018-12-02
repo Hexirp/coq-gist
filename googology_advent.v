@@ -94,8 +94,8 @@ Eval compute in fgh (A := omega_p_omega) 1 . (* 2 *)
 
 (* Empty_set, (sigT (iter Empty_set (sum unit))), (sigT (iter (sigT (iter Empty_set (sum unit))) (sum unit))), ... *)
 
-Definition omega_p_omega__ : Type -> nat -> Type
-  := fun A => iter A (sum unit) .
+Definition omega_p_omega__ : nat -> Type -> Type
+  := fun n A => iter A (sum unit) n .
 
 Definition omega_m_omega_ : nat -> Type .
 Proof.
@@ -105,10 +105,10 @@ Proof.
  -
   intro A.
   refine (sigT (A := nat) _).
-  exact (omega_p_omega__ A).
+  exact (fun n => omega_p_omega__ n A).
 Defined.
 
-Instance FGH_forall_omega_p_omega__ (A : Type) `{FGH A} : FGH_forall (omega_p_omega__ A) .
+Instance FGH_forall_omega_p_omega__ (A : Type) `{FGH A} : FGH_forall (fun n => omega_p_omega__ n A) .
 Proof.
  intro n.
  induction n.
@@ -136,8 +136,8 @@ Eval compute in fgh (A := omega_m_omega) 1 . (* 2 *)
 
 (* さらに極限を取る。 *)
 
-Definition omega_m_omega__ : Type -> nat -> Type
-  := fun A => iter A (fun B => sigT (omega_p_omega__ B)) .
+Definition omega_m_omega__ : nat -> Type -> Type
+  := fun n A => iter A (fun B => sigT (fun n => omega_p_omega__ n B)) n .
 
 Definition omega_e_omega_ : nat -> Type.
 Proof.
@@ -147,10 +147,10 @@ Proof.
  -
   intro A.
   refine (sigT (A := nat) _).
-  exact (omega_m_omega__ A).
+  exact (fun n => omega_m_omega__ n A).
 Defined.
 
-Instance FGH_forall_omega_m_omega__ (A : Type) `{FGH A} : FGH_forall (omega_m_omega__ A) .
+Instance FGH_forall_omega_m_omega__ (A : Type) `{FGH A} : FGH_forall (fun n => omega_m_omega__ n A) .
 Proof.
  intro n.
  induction n.
@@ -178,8 +178,8 @@ Eval compute in fgh (A := omega_e_omega) 1 . (* 2 *)
 
 (* さらに極限を取る。 *)
 
-Definition omega_e_omega__ : Type -> nat -> Type
-  := fun A => iter A (fun B => sigT (omega_m_omega__ B)) .
+Definition omega_e_omega__ : nat -> Type -> Type
+  := fun n A => iter A (fun B => sigT (fun n => omega_m_omega__ n B)) n .
 
 Definition omega_ee_omega_ : nat -> Type.
 Proof.
@@ -189,10 +189,10 @@ Proof.
  -
   intro A.
   refine (sigT (A := nat) _).
-  exact (omega_e_omega__ A).
+  exact (fun n => omega_e_omega__ n A).
 Defined.
 
-Instance FGH_forall_omega_e_omega__ (A : Type) `{FGH A} : FGH_forall (omega_e_omega__ A) .
+Instance FGH_forall_omega_e_omega__ (A : Type) `{FGH A} : FGH_forall (fun n => omega_e_omega__ n A) .
 Proof.
  intro n.
  induction n.
@@ -222,18 +222,27 @@ Eval compute in fgh (A := omega_ee_omega) 1 . (* 2 *)
 
 (* 極限を取る繰り返しの極限を取る *)
 
-Definition omega_en_omega_ : nat -> Type -> nat -> Type .
+Definition omega_en_omega_ : nat -> nat -> Type -> Type .
 Proof.
  refine (iter _ _).
  -
   exact omega_p_omega__.
  -
   intros F.
-  exact (fun A => iter A (fun B => sigT (F B))).
+  exact (fun n A => iter A (fun B => sigT (fun n => F n B)) n).
 Defined.
 
-Definition omega_en_omega__ : nat -> nat -> Type
-  := fun n => omega_en_omega_ n Empty_set .
+Definition omega_en_omega__ : nat -> nat -> Type .
+Proof.
+ intros m.
+ apply iter.
+ -
+  exact Empty_set.
+ -
+  intros A.
+  refine (sigT (A := nat) _).
+  exact (fun n => omega_en_omega_ m n A).
+Defined.
 
 Instance FGH_forall_omega_en_omega__ (n : nat) : FGH_forall (omega_en_omega__ n) .
 Proof.
@@ -241,5 +250,11 @@ Proof.
  -
   exact _.
  -
-  exact _.
+  intros m.
+  induction m.
+  +
+   exact _.
+  +
+   compute.
+   exact _.
 Defined.
