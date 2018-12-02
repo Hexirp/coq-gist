@@ -101,7 +101,7 @@ Definition omega_m_omega_ : nat -> Type .
 Proof.
  apply iter.
  -
-  exact Empty_set.
+  exact omega.
  -
   intro A.
   refine (sigT (A := nat) _).
@@ -143,7 +143,7 @@ Definition omega_e_omega_ : nat -> Type.
 Proof.
  apply iter.
  -
-  exact Empty_set.
+  exact omega.
  -
   intro A.
   refine (sigT (A := nat) _).
@@ -185,7 +185,7 @@ Definition omega_ee_omega_ : nat -> Type.
 Proof.
  apply iter.
  -
-  exact Empty_set.
+  exact omega.
  -
   intro A.
   refine (sigT (A := nat) _).
@@ -214,7 +214,7 @@ Defined.
 
 Definition omega_ee_omega : Type := sigT omega_ee_omega_ .
 
-(* fgh {ω↑↑ω = ε₀} と言いたいところなのだが、実際は ω^ω, (ω^ω)*ω*ω*ω*ω... = (ω^ω)*(ω^ω) = ω^(ω+ω), ω^(ω+ω+ω), ... より ω^(ω*ω) となる。 *)
+(* fgh {ω↑↑ω = ε₀} と言いたいところなのだが、実際は ω, ω^ω, (ω^ω)*ω*ω*ω*ω... = (ω^ω)*(ω^ω) = ω^(ω+ω), ω^(ω+ω+ω), ... より ω^(ω*ω) となる。 *)
 
 (* fgh {ω^(ω*ω)} ≈ 拡張配列表記 (二次元) *)
 Eval compute in fgh (A := omega_ee_omega) 1 . (* 2 *)
@@ -237,7 +237,7 @@ Proof.
  intros m.
  apply iter.
  -
-  exact Empty_set.
+  exact omega.
  -
   intros A.
   refine (sigT (A := nat) _).
