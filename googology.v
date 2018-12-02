@@ -101,7 +101,7 @@ Proof.
   exact Empty_set .
  -
   intro A.
-  refine (forall n : nat, _ n) .
+  refine (sigT (A := nat) _) .
   apply iter.
   +
    exact A.
