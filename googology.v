@@ -92,7 +92,7 @@ Eval compute in fgh (A := omega_p_omega) 1 . (* 2 *)
 
 (* さらに極限を取る。 *)
 
-(* Empty_set, (forall n, iter Empty_set (sum unit) n), (forall n, iter (forall n, iter Empty_set (sum unit) n) (sum unit) n), ... *)
+(* Empty_set, (sigT (iter Empty_set (sum unit))), (sigT (iter (sigT (iter Empty_set (sum unit))) (sum unit))), ... *)
 
 Definition omega_m_omega_ : nat -> Type .
 Proof.
@@ -123,4 +123,22 @@ Proof.
    exact _.
   +
    exact _.
+Defined.
+
+Definition omega_m_omega : Type := sigT omega_m_omega_ .
+
+(* fgh {ω*ω} ≈ チェーン表記 *)
+Eval compute in fgh (A := omega_m_omega) 1 . (* 2 *)
+
+
+(* さらに極限を取る。 *)
+
+Definition omega_e_omega_ : nat -> Type.
+Proof.
+ apply iter.
+ -
+  exact Empty_set.
+ -
+  intro A.
+  refine (sigT (A := nat) _).
 Defined.
