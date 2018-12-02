@@ -34,7 +34,7 @@ Eval compute in fgh (A := sum unit Empty_set) 2 . (* 4 *)
 Eval compute in fgh (A := sum unit Empty_set) 3 . (* 6 *)
 Eval compute in fgh (A := sum unit Empty_set) 4 . (* 8 *)
 
-(* fgh {2} n := 2 ^ n *)
+(* fgh {2} n := (2 ^ n) * n *)
 Eval compute in fgh (A := sum unit (sum unit Empty_set)) 2 . (* 8 *)
 Eval compute in fgh (A := sum unit (sum unit Empty_set)) 3 . (* 24 *)
 Eval compute in fgh (A := sum unit (sum unit Empty_set)) 4 . (* 64 *)
