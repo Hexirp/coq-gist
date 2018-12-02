@@ -116,5 +116,11 @@ Proof.
  -
   exact _.
  -
-  exact _.
+  apply FGH_sum.
+  intro m.
+  induction m.
+  +
+   exact _.
+  +
+   exact _.
 Defined.
