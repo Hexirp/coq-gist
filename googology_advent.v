@@ -1,3 +1,5 @@
+(* このソースコードは、巨大数アドベントカレンダーの 2 日目のエントリーである。 *)
+
 Require Import Coq.Init.Prelude.
 
 
@@ -220,40 +222,7 @@ Definition omega_ee_omega : Type := sigT omega_ee_omega_ .
 Eval compute in fgh (A := omega_ee_omega) 1 . (* 2 *)
 
 
-(* 極限を取る繰り返しの極限を取る *)
+(* 極限を取る繰り返しの極限を取りたかったが、難しかったのでここで終わり。FGH を Coq で実装してみたが、先人の肩は
+   素晴らしいことをつくづく実感。
 
-Definition omega_en_omega__ : nat -> nat -> Type -> Type .
-Proof.
- refine (iter _ _).
- -
-  exact omega_p_omega__.
- -
-  intros F.
-  exact (fun n A => iter A (fun B => sigT (fun n => F n B)) n).
-Defined.
-
-Definition omega_en_omega_ : nat -> nat -> Type .
-Proof.
- intros m.
- apply iter.
- -
-  exact omega.
- -
-  intros A.
-  refine (sigT (A := nat) _).
-  exact (fun n => omega_en_omega__ m n A).
-Defined.
-
-Instance FGH_forall_omega_en_omega__ (n : nat) (A : Type) `{FGH A} : FGH_forall (fun m => omega_en_omega__ n m A) .
-Proof.
- induction n.
- -
-  exact _.
- -
-  intros m.
-  induction m.
-  +
-   exact _.
-  +
-   exact _.
-Defined.
+   巨大数アドベントカレンダーのエントリーは、上の関数を使い fgh (A := omega_ee_omega) 800 とする。 *)
