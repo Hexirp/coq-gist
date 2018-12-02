@@ -214,5 +214,32 @@ Defined.
 
 Definition omega_ee_omega : Type := sigT omega_ee_omega_ .
 
-(* fgh {_} ≈ _ *)
+(* fgh {ω↑↑ω = ε₀} と言いたいところなのだが、実際は ω^ω, (ω^ω)*ω*ω*ω*ω... = (ω^ω)*(ω^ω) = ω^(ω+ω), ω^(ω+ω+ω), ... より ω^(ω*ω) となる。 *)
+
+(* fgh {ω^(ω*ω)} ≈ 拡張配列表記 (二次元) *)
 Eval compute in fgh (A := omega_ee_omega) 1 . (* 2 *)
+
+
+(* 極限を取る繰り返しの極限を取る *)
+
+Definition omega_en_omega_ : nat -> Type -> nat -> Type .
+Proof.
+ refine (iter _ _).
+ -
+  exact omega_p_omega__.
+ -
+  intros F.
+  exact (fun A => iter A (fun B => sigT (F B))).
+Defined.
+
+Definition omega_en_omega__ : nat -> nat -> Type
+  := fun n => omega_en_omega_ n Empty_set .
+
+Instance FGH_forall_omega_en_omega__ (n : nat) : FGH_forall (omega_en_omega__ n) .
+Proof.
+ induction n.
+ -
+  exact _.
+ -
+  exact _.
+Defined.
