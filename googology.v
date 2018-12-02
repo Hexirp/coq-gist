@@ -65,7 +65,7 @@ Definition omega : Type := sigT omega_ .
 
 Instance FGH_omega : FGH omega := _ .
 
-(* fgh {ω} n > Ack(n, n) *)
+(* fgh {ω} ≈ ハイパー演算子 *)
 Eval compute in fgh (A := omega) 1 . (* 1 *)
 Eval compute in fgh (A := omega) 2 . (* 8 *)
 (* Eval compute in fgh (A := omega) 3 . *) (* 計算しようとすると落ちる *)
@@ -95,7 +95,7 @@ Eval compute in fgh (A := omega_p_omega) 1 . (* 2 *)
 (* Empty_set, (sigT (iter Empty_set (sum unit))), (sigT (iter (sigT (iter Empty_set (sum unit))) (sum unit))), ... *)
 
 Definition omega_p_omega__ : Type -> nat -> Type
-  := fun A => (iter A (sum unit)) .
+  := fun A => iter A (sum unit) .
 
 Definition omega_m_omega_ : nat -> Type .
 Proof.
@@ -136,6 +136,9 @@ Eval compute in fgh (A := omega_m_omega) 1 . (* 2 *)
 
 (* さらに極限を取る。 *)
 
+Definition omega_m_omega__ : Type -> nat -> Type
+  := fun A => iter A (fun B => sigT (omega_p_omega__ B)) .
+
 Definition omega_e_omega_ : nat -> Type.
 Proof.
  apply iter.
@@ -144,4 +147,72 @@ Proof.
  -
   intro A.
   refine (sigT (A := nat) _).
+  exact (omega_m_omega__ A).
 Defined.
+
+Instance FGH_forall_omega_m_omega__ (A : Type) `{FGH A} : FGH_forall (omega_m_omega__ A) .
+Proof.
+ intro n.
+ induction n.
+ -
+  exact _.
+ -
+  exact _.
+Defined.
+
+Instance FGH_forall_omega_e_omega_ : FGH_forall omega_e_omega_ .
+Proof.
+ intro n.
+ induction n.
+ -
+  exact _.
+ -
+  exact _.
+Defined.
+
+Definition omega_e_omega : Type := sigT omega_e_omega_ .
+
+(* fgh {ω^ω} ≈ 多変数アッカーマン関数 *)
+Eval compute in fgh (A := omega_e_omega) 1 . (* 2 *)
+
+
+(* さらに極限を取る。 *)
+
+Definition omega_e_omega__ : Type -> nat -> Type
+  := fun A => iter A (fun B => sigT (omega_m_omega__ B)) .
+
+Definition omega_ee_omega_ : nat -> Type.
+Proof.
+ apply iter.
+ -
+  exact Empty_set.
+ -
+  intro A.
+  refine (sigT (A := nat) _).
+  exact (omega_e_omega__ A).
+Defined.
+
+Instance FGH_forall_omega_e_omega__ (A : Type) `{FGH A} : FGH_forall (omega_e_omega__ A) .
+Proof.
+ intro n.
+ induction n.
+ -
+  exact _.
+ -
+  exact _.
+Defined.
+
+Instance FGH_forall_omega_ee_omega_ : FGH_forall omega_ee_omega_ .
+Proof.
+ intro n.
+ induction n.
+ -
+  exact _.
+ -
+  exact _.
+Defined.
+
+Definition omega_ee_omega : Type := sigT omega_ee_omega_ .
+
+(* fgh {_} ≈ _ *)
+Eval compute in fgh (A := omega_ee_omega) 1 . (* 2 *)
