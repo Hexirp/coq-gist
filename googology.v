@@ -94,19 +94,28 @@ Eval compute in fgh (A := omega_p_omega) 1 . (* 2 *)
 
 (* Empty_set, (sigT (iter Empty_set (sum unit))), (sigT (iter (sigT (iter Empty_set (sum unit))) (sum unit))), ... *)
 
+Definition omega_p_omega__ : Type -> nat -> Type
+  := fun A => (iter A (sum unit)) .
+
 Definition omega_m_omega_ : nat -> Type .
 Proof.
  apply iter.
  -
-  exact Empty_set .
+  exact Empty_set.
  -
   intro A.
-  refine (sigT (A := nat) _) .
-  apply iter.
-  +
-   exact A.
-  +
-   exact (sum unit).
+  refine (sigT (A := nat) _).
+  exact (omega_p_omega__ A).
+Defined.
+
+Instance FGH_forall_omega_p_omega__ (A : Type) `{FGH A} : FGH_forall (omega_p_omega__ A) .
+Proof.
+ intro n.
+ induction n.
+ -
+  exact _.
+ -
+  exact _.
 Defined.
 
 Instance FGH_forall_omega_m_omega_ : FGH_forall omega_m_omega_ .
@@ -116,13 +125,7 @@ Proof.
  -
   exact _.
  -
-  apply FGH_sum.
-  intro m.
-  induction m.
-  +
-   exact _.
-  +
-   exact _.
+  exact _.
 Defined.
 
 Definition omega_m_omega : Type := sigT omega_m_omega_ .
