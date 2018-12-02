@@ -75,7 +75,7 @@ Definition omega_p_omega_ : nat -> Type := iter omega (sum unit) .
 
 Instance FGH_forall_omega_p_omega_ : FGH_forall omega_p_omega_ .
 Proof.
- intros n.
+ intro n.
  induction n.
  -
   exact _.
@@ -107,4 +107,14 @@ Proof.
    exact A.
   +
    exact (sum unit).
+Defined.
+
+Instance FGH_forall_omega_m_omega_ : FGH_forall omega_m_omega_ .
+Proof.
+ intro n.
+ induction n.
+ -
+  exact _.
+ -
+  exact _.
 Defined.
