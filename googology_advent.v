@@ -1,6 +1,9 @@
-(* このソースコードは、巨大数アドベントカレンダーの 2 日目のエントリーである。 *)
+(* このソースコードは、巨大数 Advent Calendar 2018 の 2 日目のエントリーである。 *)
 
 Require Import Coq.Init.Prelude.
+
+
+(* 概要: Coq で急増加関数 (FGH) を実装してみる。 *)
 
 
 Class FGH (A : Type) := { fgh : nat -> nat } .
@@ -222,7 +225,6 @@ Definition omega_ee_omega : Type := sigT omega_ee_omega_ .
 Eval compute in fgh (A := omega_ee_omega) 1 . (* 2 *)
 
 
-(* 極限を取る繰り返しの極限を取りたかったが、難しかったのでここで終わり。FGH を Coq で実装してみたが、先人の肩は
-   素晴らしいことをつくづく実感。
+(* 極限を取る操作そのもの繰り返しの極限を取りたかったが、難しく短期間では書けそうになかったのでここで終わり。無念。ε₀ に到達したかった。FGH を Coq で実装してみたが、簡単に実装できるのに強力なのを感じて、先人の肩は素晴らしいことをつくづく実感した。
 
-   巨大数アドベントカレンダーのエントリーは、上の関数を使い fgh (A := omega_ee_omega) 800 とする。 *)
+   巨大数 Advent Calendar 2018 のエントリーは、上の関数を使い fgh (A := omega_ee_omega) 800 とする。 *)
