@@ -222,7 +222,7 @@ Eval compute in fgh (A := omega_ee_omega) 1 . (* 2 *)
 
 (* 極限を取る繰り返しの極限を取る *)
 
-Definition omega_en_omega_ : nat -> nat -> Type -> Type .
+Definition omega_en_omega__ : nat -> nat -> Type -> Type .
 Proof.
  refine (iter _ _).
  -
@@ -232,7 +232,7 @@ Proof.
   exact (fun n A => iter A (fun B => sigT (fun n => F n B)) n).
 Defined.
 
-Definition omega_en_omega__ : nat -> nat -> Type .
+Definition omega_en_omega_ : nat -> nat -> Type .
 Proof.
  intros m.
  apply iter.
@@ -241,10 +241,10 @@ Proof.
  -
   intros A.
   refine (sigT (A := nat) _).
-  exact (fun n => omega_en_omega_ m n A).
+  exact (fun n => omega_en_omega__ m n A).
 Defined.
 
-Instance FGH_forall_omega_en_omega__ (n : nat) : FGH_forall (omega_en_omega__ n) .
+Instance FGH_forall_omega_en_omega__ (n : nat) (A : Type) `{FGH A} : FGH_forall (fun m => omega_en_omega__ n m A) .
 Proof.
  induction n.
  -
@@ -255,6 +255,5 @@ Proof.
   +
    exact _.
   +
-   compute.
    exact _.
 Defined.
