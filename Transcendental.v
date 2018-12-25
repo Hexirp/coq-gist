@@ -7,7 +7,7 @@ Open Scope nat_scope.
 (** フェルマーの最終定理 *)
 
 Definition felmat
-  : forall n : nat, 2 < n -> ~ exists x y z, x ^ n + y ^ n = z ^ n.
+  : forall n : nat, 2 < n -> ~ exists x y z, 0 < x /\ 0 < y /\ 0 < z /\ x ^ n + y ^ n = z ^ n.
 Proof.
   (* [Admitted] を [Qed] に取り換えて、この空欄を埋めよ *)
 Admitted.
@@ -32,7 +32,7 @@ Proof.
 Admitted.
 
 (** コラッツの問題 *)
-Definition collatzic n := if even n then n * 3 + 1 else div2 n.
+Definition collatzic n := if even n then div2 n else n * 3 + 1.
 
 Definition collatz
   : forall n, n <> 0 -> exists p, iter p collatzic n = 1.
