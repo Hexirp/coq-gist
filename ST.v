@@ -11,7 +11,7 @@ Definition STMapValue (f : nat -> option Type) (x : nat) : Type :=
 (* STMap に値がどれぐらい入っているかのカウンタの性質を記述する。例えばカウンタが 0 であれば、何も
    入っていない。 *)
 Definition STMapProp (i : nat) (f : nat -> option Type) : Prop :=
-    forall n, n < i -> f n = None.
+    forall n, n >= i -> f n = None.
 
 (* 関数を Map として見做す。これは STRef が参照する値を保存することが出来る。型レベルでも保存できる。 *)
 Inductive STMap (s : Type) : Type :=
