@@ -23,5 +23,9 @@ Inductive STMap (s : Type) : Type :=
 
                   STMap s.
 
+(* 内部では nat だが、そうではないように見える。 *)
+Inductive STRef (s : Type) (a : Type) : Type :=
+    | cSTRef : nat -> STRef s a.
+
 (* s として STMap を取ることを想定している。 *)
 Definition ST (s : Type) (a : Type) : Type := STMap s -> STMap s * a.
