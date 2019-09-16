@@ -35,5 +35,10 @@ Definition ST (s : Type) (a : Type) : Type := STMap s -> STMap s * a.
 
 Definition emptySTMap (s : Type) : STMap s.
 Proof.
- refine (cSTMap s 0 (fun _ => None) (pair _ _)).
- - Abort.
+  refine (cSTMap s 0 (fun _ => None) (pair _ _)).
+  - intros n np.
+    reflexivity.
+  - refine (fun n => _).
+    unfold STMapValue.
+    exact tt.
+Defined.
