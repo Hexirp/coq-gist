@@ -33,5 +33,7 @@ Definition ST (s : Type) (a : Type) : Type := STMap s -> STMap s * a.
 (* ### STMap と STRef は分解してはならない ### *)
 
 
-Definition emptySTMap (s : Type) : STMap s :=
-    cSTMap s 0 (fun _ => None) _.
+Definition emptySTMap (s : Type) : STMap s.
+Proof.
+ refine (cSTMap s 0 (fun _ => None) (pair _ _)).
+ - Abort.
