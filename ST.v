@@ -29,3 +29,5 @@ Inductive STRef (s : Type) (a : Type) : Type :=
 
 (* s として STMap を取ることを想定している。 *)
 Definition ST (s : Type) (a : Type) : Type := STMap s -> STMap s * a.
+
+(* ### STMap と STRef は分解してはならない ### *)
