@@ -1,5 +1,7 @@
 Require Import Coq.Init.Prelude Coq.Init.Specif.
 
-Definition STMap (s : Type) : Type := { f : nat -> Type & forall n : nat, f n }.
+(* 関数を Map として見做す。これは STRef が参照する値を保存することが出来る。型レベルでも保存できる。 *)
+Definition STMap : Type := { f : nat -> Type & forall n : nat, f n }.
 
-Definition ST (s : Type) (a : Type) : Type := STMap s -> STMap s * a.
+(* s として STMap を取ることを想定している。 *)
+Definition ST (s : Type) (a : Type) : Type := s -> s * a.
