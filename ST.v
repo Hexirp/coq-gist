@@ -9,7 +9,7 @@ Definition STMapValue (f : nat -> option Type) (x : nat) : Type :=
     end.
 
 (* 関数を Map として見做す。これは STRef が参照する値を保存することが出来る。型レベルでも保存できる。 *)
-Definition STMap : Type := { f : nat -> option Type & forall n : nat, STMapValue f n }.
+Definition STMap (s : Type) : Type := { f : nat -> option Type & forall n : nat, STMapValue f n }.
 
 (* s として STMap を取ることを想定している。 *)
 Definition ST (s : Type) (a : Type) : Type := s -> s * a.
