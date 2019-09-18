@@ -1,4 +1,4 @@
-Require Import Coq.Init.Prelude Coq.Init.Specif.
+Require Import Coq.Init.Prelude Coq.Init.Specif Coq.Init.Nat.
 
 (* 自然数をアドレスと考える。アドレス n に型が入っていなければ、値も入っていない。
    型が入っていれば値も必ず入っている。当然、値が入っていれば型も入っている。 *)
@@ -33,6 +33,7 @@ Definition ST (s : Type) (a : Type) : Type := STMap s -> STMap s * a.
 (* ### STMap と STRef は分解してはならない ### *)
 
 
+(* 初期値。 *)
 Definition emptySTMap (s : Type) : STMap s.
 Proof.
   refine (cSTMap s 0 (fun _ => None) (pair _ _)).
@@ -42,3 +43,16 @@ Proof.
     unfold STMapValue.
     exact tt.
 Defined.
+
+Definition newSTRef (s : Type) (a : Type) (x : a) : ST s (STRef s a).
+Proof.
+  refine (fun st => _).
+  refine (match st with cSTMap _ st_i st_f st_pv => _ end).
+  refine (match st_pv with pair st_p st_v => _ end).
+  refine (let st_i' := st_i + 1 in _).
+  refine (let st_f' := fun n => if eqb n st_i then Some a else st_f n in _).
+  assert (st_p' : STMapProp st_i' st_f').
+  - intros n np.
+    unfold st_f'.
+    assert (H : forall p q, q + 1 <= p -> eqb p q = false).
+    + Abort.
