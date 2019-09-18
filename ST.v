@@ -54,5 +54,9 @@ Proof.
   assert (st_p' : STMapProp st_i' st_f').
   - intros n np.
     unfold st_f'.
-    assert (H : forall p q, q + 1 <= p -> eqb p q = false).
-    + Abort.
+    assert (H : forall q p, q + 1 <= p -> eqb p q = false).
+    + intros q p.
+      induction p.
+      * intros H.
+        inversion H.
+        Abort.
