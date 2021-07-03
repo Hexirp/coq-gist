@@ -177,44 +177,53 @@ End Function.
 Module TYPE.
 
 Inductive T_
-  (A : Type)
-  (A_ : A -> A -> Type)
-  (A__ : forall x : A, forall y : A, A_ x y -> A_ x y -> Type)
-  (B : Type)
-  (B_ : B -> B -> Type)
-  (B__ : forall x : B, forall y : B, B_ x y -> B_ x y -> Type)
+  (R : forall A : Type, A -> A -> Type)
   (
-    WL
+    R_id
       :
+        forall
+          A : Type
+        ,
+        forall
+          B : Type
+        ,
         forall
           f : A -> B
         ,
-        forall
-          g0 : A -> A
-        ,
-        forall
-          g1 : A -> A
-        ,
-          Function.T_ A A_ A A_ g0 g1
-        ->
-          Function.T_ A A_ B B_ (Function.compose f g0) (Function.compose f g1)
+          Function.T_ A (R A) B (R B) f f
   )
   (
-   WR
+    R_compose
       :
         forall
-          f0 : B -> B
+          A : Type
         ,
         forall
-          f1 : B -> B
+          B : Type
         ,
         forall
-          g : A -> B
+          C : Type
         ,
-          Function.T_ B B_ B B_ f0 f1
+        forall
+          f0 : B -> C
+        ,
+        forall
+          f1 : B -> C
+        ,
+        forall
+          g0 : A -> B
+        ,
+        forall
+          g1 : A -> B
+        ,
+          Function.T_ B (R B) C (R C) f0 f1
         ->
-          Function.T_ A A_ B B_ (Function.compose f0 g) (Function.compose f1 g)
+          Function.T_ A (R A) B (R B) g0 g1
+        ->
+          Function.T_ A (R A) C (R C) (Function.compose f0 g0) (Function.compose f1 g1)
   )
+  (A : Type)
+  (B : Type)
   : Type
   :=
     value_
@@ -228,26 +237,26 @@ Inductive T_
         forall
           r
             :
-              Function.T_ B B_ B B_ (Function.compose f g) Function.id
+              Function.T_ B (R B) B (R B) (Function.compose f g) Function.id
         ,
         forall
           s
             :
-              Function.T_ A A_ A A_ (Function.compose g f) Function.id
+              Function.T_ A (R A) A (R A) (Function.compose g f) Function.id
         ,
           Function.T__
             A
-            A_
-            A__
+            (R A)
+            (fun x : A => fun y : A => R (R A x y))
             B
-            B_
-            B__
+            (R B)
+            (fun x : B => fun y : B => R (R B x y))
             (Function.compose f (Function.compose g f))
             f
-            (WR (Function.compose f g) Function.id f r)
-            (WL f (Function.compose g f) Function.id s)
+            (R_compose A B B (Function.compose f g) Function.id f f r (R_id A B f))
+            (R_compose A A B f f (Function.compose g f) Function.id (R_id A B f) s)
         ->
-          T_ A A_ A__ B B_ B__ WL WR
+          T_ R R_id R_compose A B
   .
 
 End TYPE.
