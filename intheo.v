@@ -195,21 +195,9 @@ Inductive T_
         forall
           g1 : A -> A
         ,
-          Function.T_
-            A
-            A_
-            A
-            A_
-            g0
-            g1
+          Function.T_ A A_ A A_ g0 g1
         ->
-          Function.T_
-            A
-            A_
-            B
-            B_
-            (Function.compose f g0)
-            (Function.compose f g1)
+          Function.T_ A A_ B B_ (Function.compose f g0) (Function.compose f g1)
   )
   (
    WR
@@ -223,21 +211,9 @@ Inductive T_
         forall
           g : A -> B
         ,
-          Function.T_
-            B
-            B_
-            B
-            B_
-            f0
-            f1
+          Function.T_ B B_ B B_ f0 f1
         ->
-          Function.T_
-            A
-            A_
-            B
-            B_
-            (Function.compose f0 g)
-            (Function.compose f1 g)
+          Function.T_ A A_ B B_ (Function.compose f0 g) (Function.compose f1 g)
   )
   : Type
   :=
@@ -252,24 +228,12 @@ Inductive T_
         forall
           r
             :
-              Function.T_
-                B
-                B_
-                B
-                B_
-                (Function.compose f g)
-                Function.id
+              Function.T_ B B_ B B_ (Function.compose f g) Function.id
         ,
         forall
           s
             :
-              Function.T_
-                A
-                A_
-                A
-                A_
-                (Function.compose g f)
-                Function.id
+              Function.T_ A A_ A A_ (Function.compose g f) Function.id
         ,
           Function.T__
             A
