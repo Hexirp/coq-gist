@@ -605,4 +605,27 @@ Definition substitute
     fun (X : Type) => flatten X (y (Expression.T X) (x X))
   .
 
+Module Is_Typed.
+
+Inductive T
+  (X : Type)
+  (R : X -> Expression.T X -> Type)
+  (x : Expression.T X)
+  (t : Expression.T X)
+  : Type
+  :=
+    variable
+      :
+        forall
+          x_v : X
+        ,
+          R x_v t
+        ->
+          Path.T (Expression.T X) x (Expression.variable X x_v)
+        ->
+          T X R x t
+  .
+
+End Is_Typed.
+
 End Main.
