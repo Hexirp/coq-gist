@@ -345,11 +345,11 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
         ,
           T_ X X_ x_t y_t
         ->
-          Dependent_Function.T_
+          Function.T_
             X
             X_
-            (fun x : X => T X)
-            (fun x : X => fun y : X => fun p : X_ x y => T_ X X_)
+            (T X)
+            (T_ X X_)
             x_f
             y_f
         ->
@@ -383,11 +383,11 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
         ->
           T_ X X_ x_x y_x
         ->
-          Dependent_Function.T_
+          Function.T_
             X
             X_
-            (fun x : X => T X)
-            (fun x : X => fun y : X => fun p : X_ x y => T_ X X_)
+            (T X)
+            (T_ X X_)
             x_f
             y_f
         ->
@@ -421,11 +421,11 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
         ,
           T_ X X_ x_t y_t
         ->
-          Dependent_Function.T_
+          Function.T_
             X
             X_
-            (fun x : X => T X)
-            (fun x : X => fun y : X => fun p : X_ x y => T_ X X_)
+            (T X)
+            (T_ X X_)
             x_p
             y_p
         ->
@@ -443,11 +443,11 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
         forall
           y_f : X -> T X
         ,
-          Dependent_Function.T_
+          Function.T_
             X
             X_
-            (fun x : X => T X)
-            (fun x : X => fun y : X => fun p : X_ x y => T_ X X_)
+            (T X)
+            (T_ X X_)
             x_f
             y_f
         ->
