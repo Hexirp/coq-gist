@@ -278,7 +278,7 @@ Inductive T (X : Type) : Type
   |
     type_function : T X -> (X -> T X) -> T X
   |
-    type_self : T X -> (X -> T X) -> T X
+    type_self : (X -> T X) -> T X
   |
     (* _≡_ : (A : Type) -> (x : A) -> (y : A) -> Type *)
     type_congruence : T X -> T X -> T X -> T X
@@ -438,19 +438,11 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
     type_self_
       :
         forall
-          x_t : T X
-        ,
-        forall
           x_f : X -> T X
-        ,
-        forall
-          y_t : T X
         ,
         forall
           y_f : X -> T X
         ,
-          T_ X X_ x_t y_t
-        ->
           Dependent_Function.T_
             X
             X_
@@ -459,9 +451,9 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
             x_f
             y_f
         ->
-          Path.T (T X) x (type_self X x_t x_f)
+          Path.T (T X) x (type_self X x_f)
         ->
-          Path.T (T X) y (type_self X y_t y_f)
+          Path.T (T X) y (type_self X y_f)
         ->
           T_ X X_ x y
   |
@@ -578,11 +570,10 @@ Definition flatten (X : Type) (x : Expression.T (Expression.T X)) : Expression.T
                       (func x_t)
                       (fun x_v : X => func (x_p (Expression.variable X x_v)))
               |
-                Expression.type_self _ x_t x_f
+                Expression.type_self _ x_f
                   =>
                     Expression.type_self
                       X
-                      (func x_t)
                       (fun x_v : X => func (x_f (Expression.variable X x_v)))
               |
                 Expression.type_congruence _ x_t x_x x_y
