@@ -274,14 +274,14 @@ Inductive T (X : Type) : Type
     definition : T X -> T X -> (X -> T X) -> T X
   |
     (* Type : Type *)
-    type : T X
+    type_type : T X
   |
-    function : T X -> (X -> T X) -> T X
+    type_function : T X -> (X -> T X) -> T X
   |
-    recursion : T X -> (X -> T X) -> T X
+    type_self : T X -> (X -> T X) -> T X
   |
     (* _≡_ : (A : Type) -> (x : A) -> (y : A) -> Type *)
-    congruence : T X -> T X -> T X -> T X
+    type_congruence : T X -> T X -> T X -> T X
   |
     (* cast : (A : Type) -> (B : Type) -> (p : _≡_ Type A B) -> (x : A) -> B *)
     casting : T X -> T X -> T X -> T X -> T X
@@ -397,15 +397,15 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
         ->
           T_ X X_ x y
   |
-    type_
+    type_type_
       :
-          Path.T (T X) x (type X)
+          Path.T (T X) x (type_type X)
         ->
-          Path.T (T X) y (type X)
+          Path.T (T X) y (type_type X)
         ->
           T_ X X_ x y
   |
-    function_
+    type_function_
       :
         forall
           x_t : T X
@@ -429,13 +429,13 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
             x_p
             y_p
         ->
-          Path.T (T X) x (function X x_t x_p)
+          Path.T (T X) x (type_function X x_t x_p)
         ->
-          Path.T (T X) y (function X y_t y_p)
+          Path.T (T X) y (type_function X y_t y_p)
         ->
           T_ X X_ x y
   |
-    recursion_
+    type_self_
       :
         forall
           x_t : T X
@@ -459,13 +459,13 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
             x_f
             y_f
         ->
-          Path.T (T X) x (recursion X x_t x_f)
+          Path.T (T X) x (type_self X x_t x_f)
         ->
-          Path.T (T X) y (recursion X y_t y_f)
+          Path.T (T X) y (type_self X y_t y_f)
         ->
           T_ X X_ x y
   |
-    congruence_
+    type_congruence_
       :
         forall
           x_t : T X
@@ -491,9 +491,9 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
         ->
           T_ X X_ x_y y_y
         ->
-          Path.T (T X) x (congruence X x_t x_x x_y)
+          Path.T (T X) x (type_congruence X x_t x_x x_y)
         ->
-          Path.T (T X) y (congruence X y_t y_x y_y)
+          Path.T (T X) y (type_congruence X y_t y_x y_y)
         ->
           T_ X X_ x y
   |
@@ -569,25 +569,25 @@ Definition flatten (X : Type) (x : Expression.T (Expression.T X)) : Expression.T
                       (func x_x)
                       (fun x_v : X => func (x_f (Expression.variable X x_v)))
               |
-                Expression.type _ => Expression.type X
+                Expression.type_type _ => Expression.type_type X
               |
-                Expression.function _ x_t x_p
+                Expression.type_function _ x_t x_p
                   =>
-                    Expression.function
+                    Expression.type_function
                       X
                       (func x_t)
                       (fun x_v : X => func (x_p (Expression.variable X x_v)))
               |
-                Expression.recursion _ x_t x_f
+                Expression.type_self _ x_t x_f
                   =>
-                    Expression.recursion
+                    Expression.type_self
                       X
                       (func x_t)
                       (fun x_v : X => func (x_f (Expression.variable X x_v)))
               |
-                Expression.congruence _ x_t x_x x_y
+                Expression.type_congruence _ x_t x_x x_y
                   =>
-                    Expression.congruence X (func x_t) (func x_x) (func x_y)
+                    Expression.type_congruence X (func x_t) (func x_x) (func x_y)
               |
                 Expression.casting _ x_t x_s x_p x_x
                   =>
