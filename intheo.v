@@ -716,6 +716,40 @@ Inductive T
         ->
           T X f R x t
   |
+    self_gen
+      :
+        forall
+          v_T : X -> Expression.T X
+        ,
+        forall
+          v_t : Expression.T X
+        ,
+          T X f R t (f v_T v_t)
+        ->
+          T X f R (Expression.type_self X v_T) (Expression.type_type X)
+        ->
+          Path.T (Expression.T X) x v_t
+        ->
+          Path.T (Expression.T X) t (Expression.type_self X v_T)
+        ->
+          T X f R x t
+  |
+    self_inst
+      :
+        forall
+          v_T : X -> Expression.T X
+        ,
+        forall
+          v_t : Expression.T X
+        ,
+          T X f R v_t (Expression.type_self X v_T)
+        ->
+          Path.T (Expression.T X) x v_t
+        ->
+          Path.T (Expression.T X) t (f v_T v_t)
+        ->
+          T X f R x t
+  |
     type_congruence
       :
         forall
