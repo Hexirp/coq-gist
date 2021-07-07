@@ -600,6 +600,7 @@ Module Is_Typed.
 
 Inductive T
   (X : Type)
+  (f : Expression.T X -> X)
   (R : X -> Expression.T X -> Type)
   (x : Expression.T X)
   (t : Expression.T X)
@@ -614,7 +615,31 @@ Inductive T
         ->
           Path.T (Expression.T X) x (Expression.variable X x_v)
         ->
-          T X R x t
+          T X f R x t
+  |
+    application
+      :
+        forall
+          x_f : Expression.T X
+        ,
+        forall
+          x_x : Expression.T X
+        ,
+        forall
+          t_a : Expression.T X
+        ,
+        forall
+          t_b : X -> Expression.T X
+        ,
+          (T X f R x_f (Expression.type_function X t_a t_b))
+        ->
+          (T X f R x_x t_a)
+        ->
+          Path.T (Expression.T X) x (Expression.application X x_f x_x)
+        ->
+          Path.T (Expression.T X) t (t_b (f x_x))
+        ->
+          T X f R x t
   .
 
 End Is_Typed.
