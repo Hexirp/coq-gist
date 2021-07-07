@@ -688,6 +688,14 @@ Inductive T
           Path.T (Expression.T X) t (f v_B v_t)
         ->
           T X f R x t
+  |
+    type_type
+      :
+          Path.T (Expression.T X) x (Expression.type_type X)
+        ->
+          Path.T (Expression.T X) t (Expression.type_type X)
+        ->
+          T X f R x t
   .
 
 End Is_Typed.
