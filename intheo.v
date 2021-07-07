@@ -707,7 +707,7 @@ Inductive T
         ,
           Path.T (Expression.T X) x (Expression.type_function X v_A v_B)
         ->
-          Path.T (Expression.T X) x (Expression.type_type X)
+          Path.T (Expression.T X) t (Expression.type_type X)
         ->
           T X f R x t
   .
