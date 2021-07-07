@@ -283,7 +283,7 @@ Inductive T (X : Type) : Type
     (* _≡_ : (A : Type) -> (B : Type) -> Type *)
     type_congruence : T X -> T X -> T X
   |
-    (* cast : (A : Type) -> (B : Type) -> (x : A) -> (p : _≡_ Type A B) -> B *)
+    (* cast : (A : Type) -> (x : A) -> (B : Type) -> (p : _≡_ Type A B) -> B *)
     casting : T X -> T X -> T X -> T X -> T X
   .
 
@@ -748,7 +748,7 @@ Inductive T
         ->
           T X f R v_p (Expression.type_congruence X v_A v_B)
         ->
-          Path.T (Expression.T X) x (Expression.casting X v_A v_B v_t v_p)
+          Path.T (Expression.T X) x (Expression.casting X v_A v_t v_B v_p)
         ->
           Path.T (Expression.T X) t v_B
         ->
