@@ -729,6 +729,30 @@ Inductive T
           Path.T (Expression.T X) t (Expression.type_type X)
         ->
           T X f R x t
+  |
+    casting
+      :
+        forall
+          v_A : Expression.T X
+        ,
+        forall
+          v_B : Expression.T X
+        ,
+        forall
+          v_t : Expression.T X
+        ,
+        forall
+          v_p : Expression.T X
+        ,
+          T X f R v_t v_A
+        ->
+          T X f R v_p (Expression.type_congruence X v_A v_B)
+        ->
+          Path.T (Expression.T X) x (Expression.casting X v_A v_B v_t v_p)
+        ->
+          Path.T (Expression.T X) t v_B
+        ->
+          T X f R x t
   .
 
 End Is_Typed.
