@@ -664,6 +664,30 @@ Inductive T
           Path.T (Expression.T X) t (Expression.type_function X v_A v_B)
         ->
           T X f R x t
+  |
+    definition
+      :
+        forall
+          v_A : Expression.T X
+        ,
+        forall
+          v_B : X -> Expression.T X
+        ,
+        forall
+          v_t : Expression.T X
+        ,
+        forall
+          v_s : X -> Expression.T X
+        ,
+          (T X f R v_t v_A)
+        ->
+          (forall v_x : X, R v_x v_A -> T X f R (v_s v_x) (v_B v_x))
+        ->
+          Path.T (Expression.T X) x (Expression.definition X v_A v_t v_s)
+        ->
+          Path.T (Expression.T X) t (f v_B v_t)
+        ->
+          T X f R x t
   .
 
 End Is_Typed.
