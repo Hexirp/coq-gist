@@ -271,20 +271,10 @@ Inductive T (X : Type) : Type
   |
     abstraction : T X -> (X -> T X) -> T X
   |
-    definition : T X -> T X -> (X -> T X) -> T X
-  |
     (* Type : Type *)
     type_type : T X
   |
     type_function : T X -> (X -> T X) -> T X
-  |
-    type_self : (X -> T X) -> T X
-  |
-    (* _≡_ : (A : Type) -> (B : Type) -> Type *)
-    type_congruence : T X -> T X -> T X
-  |
-    (* cast : (A : Type) -> (x : A) -> (B : Type) -> (p : _≡_ Type A B) -> B *)
-    casting : T X -> T X -> T X -> T X -> T X
   .
 
 Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
@@ -359,44 +349,6 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
         ->
           T_ X X_ x y
   |
-    definition_
-      :
-        forall
-          x_t : T X
-        ,
-        forall
-          x_x : T X
-        ,
-        forall
-          x_f : X -> T X
-        ,
-        forall
-          y_t : T X
-        ,
-        forall
-          y_x : T X
-        ,
-        forall
-          y_f : X -> T X
-        ,
-          T_ X X_ x_t y_t
-        ->
-          T_ X X_ x_x y_x
-        ->
-          Function.T_
-            X
-            X_
-            (T X)
-            (T_ X X_)
-            x_f
-            y_f
-        ->
-          Path.T (T X) x (definition X x_t x_x x_f)
-        ->
-          Path.T (T X) y (definition X y_t y_x y_f)
-        ->
-          T_ X X_ x y
-  |
     type_type_
       :
           Path.T (T X) x (type_type X)
@@ -434,92 +386,6 @@ Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
           Path.T (T X) y (type_function X y_t y_p)
         ->
           T_ X X_ x y
-  |
-    type_self_
-      :
-        forall
-          x_f : X -> T X
-        ,
-        forall
-          y_f : X -> T X
-        ,
-          Function.T_
-            X
-            X_
-            (T X)
-            (T_ X X_)
-            x_f
-            y_f
-        ->
-          Path.T (T X) x (type_self X x_f)
-        ->
-          Path.T (T X) y (type_self X y_f)
-        ->
-          T_ X X_ x y
-  |
-    type_congruence_
-      :
-        forall
-          x_x : T X
-        ,
-        forall
-          x_y : T X
-        ,
-        forall
-          y_x : T X
-        ,
-        forall
-          y_y : T X
-        ,
-          T_ X X_ x_x y_x
-        ->
-          T_ X X_ x_y y_y
-        ->
-          Path.T (T X) x (type_congruence X x_x x_y)
-        ->
-          Path.T (T X) y (type_congruence X y_x y_y)
-        ->
-          T_ X X_ x y
-  |
-    casting_
-      :
-        forall
-          x_t : T X
-        ,
-        forall
-          x_s : T X
-        ,
-        forall
-          x_p : T X
-        ,
-        forall
-          x_x : T X
-        ,
-        forall
-          y_t : T X
-        ,
-        forall
-          y_s : T X
-        ,
-        forall
-          y_p : T X
-        ,
-        forall
-          y_x : T X
-        ,
-          T_ X X_ x_t y_t
-        ->
-          T_ X X_ x_s y_s
-        ->
-          T_ X X_ x_p y_p
-        ->
-          T_ X X_ x_x y_x
-        ->
-          Path.T (T X) x (casting X x_t x_s x_p x_x)
-        ->
-          Path.T (T X) y (casting X y_t y_s y_p y_x)
-        ->
-          T_ X X_ x y
   .
 
 End Expression.
@@ -545,14 +411,6 @@ Definition flatten (X : Type) (x : Expression.T (Expression.T X)) : Expression.T
                       (func x_t)
                       (fun x_v : X => func (x_f (Expression.variable X x_v)))
               |
-                Expression.definition _ x_t x_x x_f
-                  =>
-                    Expression.definition
-                      X
-                      (func x_t)
-                      (func x_x)
-                      (fun x_v : X => func (x_f (Expression.variable X x_v)))
-              |
                 Expression.type_type _ => Expression.type_type X
               |
                 Expression.type_function _ x_t x_p
@@ -561,20 +419,6 @@ Definition flatten (X : Type) (x : Expression.T (Expression.T X)) : Expression.T
                       X
                       (func x_t)
                       (fun x_v : X => func (x_p (Expression.variable X x_v)))
-              |
-                Expression.type_self _ x_f
-                  =>
-                    Expression.type_self
-                      X
-                      (fun x_v : X => func (x_f (Expression.variable X x_v)))
-              |
-                Expression.type_congruence _ x_x x_y
-                  =>
-                    Expression.type_congruence X (func x_x) (func x_y)
-              |
-                Expression.casting _ x_t x_s x_p x_x
-                  =>
-                    Expression.casting X (func x_t) (func x_s) (func x_p) (func x_x)
               end
     in
       func x
@@ -657,30 +501,6 @@ Inductive T
         ->
           T X f R x t
   |
-    definition
-      :
-        forall
-          v_A : Expression.T X
-        ,
-        forall
-          v_B : X -> Expression.T X
-        ,
-        forall
-          v_t : Expression.T X
-        ,
-        forall
-          v_s : X -> Expression.T X
-        ,
-          (T X f R v_t v_A)
-        ->
-          (forall v_x : X, R v_x v_A -> T X f R (v_s v_x) (v_B v_x))
-        ->
-          Path.T (Expression.T X) x (Expression.definition X v_A v_t v_s)
-        ->
-          Path.T (Expression.T X) t (f v_B v_t)
-        ->
-          T X f R x t
-  |
     type_type
       :
           Path.T (Expression.T X) x (Expression.type_type X)
@@ -700,91 +520,6 @@ Inductive T
           Path.T (Expression.T X) x (Expression.type_function X v_A v_B)
         ->
           Path.T (Expression.T X) t (Expression.type_type X)
-        ->
-          T X f R x t
-  |
-    type_self
-      :
-        forall
-          v_T : X -> Expression.T X
-        ,
-          (forall v_x : X, R v_x (Expression.type_self X v_T) -> T X f R (v_T v_x) (Expression.type_type X))
-        ->
-          Path.T (Expression.T X) x (Expression.type_self X v_T)
-        ->
-          Path.T (Expression.T X) t (Expression.type_type X)
-        ->
-          T X f R x t
-  |
-    self_gen
-      :
-        forall
-          v_T : X -> Expression.T X
-        ,
-        forall
-          v_t : Expression.T X
-        ,
-          T X f R t (f v_T v_t)
-        ->
-          T X f R (Expression.type_self X v_T) (Expression.type_type X)
-        ->
-          Path.T (Expression.T X) x v_t
-        ->
-          Path.T (Expression.T X) t (Expression.type_self X v_T)
-        ->
-          T X f R x t
-  |
-    self_inst
-      :
-        forall
-          v_T : X -> Expression.T X
-        ,
-        forall
-          v_t : Expression.T X
-        ,
-          T X f R v_t (Expression.type_self X v_T)
-        ->
-          Path.T (Expression.T X) x v_t
-        ->
-          Path.T (Expression.T X) t (f v_T v_t)
-        ->
-          T X f R x t
-  |
-    type_congruence
-      :
-        forall
-          v_A : Expression.T X
-        ,
-        forall
-          v_B : Expression.T X
-        ,
-          Path.T (Expression.T X) x (Expression.type_congruence X v_A v_B)
-        ->
-          Path.T (Expression.T X) t (Expression.type_type X)
-        ->
-          T X f R x t
-  |
-    casting
-      :
-        forall
-          v_A : Expression.T X
-        ,
-        forall
-          v_B : Expression.T X
-        ,
-        forall
-          v_t : Expression.T X
-        ,
-        forall
-          v_p : Expression.T X
-        ,
-          T X f R v_t v_A
-        ->
-          T X f R v_p (Expression.type_congruence X v_A v_B)
-        ->
-          Path.T (Expression.T X) x (Expression.casting X v_A v_t v_B v_p)
-        ->
-          Path.T (Expression.T X) t v_B
         ->
           T X f R x t
   .
