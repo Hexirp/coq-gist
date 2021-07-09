@@ -8,7 +8,7 @@ Module Path.
 Inductive T (A : Type) (x : A) : A -> Type
   :=
     id : T A x x
-  .
+.
 
 End Path.
 
@@ -28,7 +28,7 @@ Inductive T_
           (forall x : A, forall y : A, forall p : A_ x y, B_ x y p (f x) (g y))
         ->
           T_ A A_ B B_ f g
-  .
+.
 
 Inductive T__
   (A : Type)
@@ -99,7 +99,7 @@ Inductive T__
           )
         ->
           T__ A A_ A__ B B_ B__ f g x y
-  .
+.
 
 End Dependent_Function.
 
@@ -119,7 +119,7 @@ Inductive T_
           (forall x : A, forall y : A, A_ x y -> B_ (f x) (g y))
         ->
           T_ A A_ B B_ f g
-  .
+.
 
 Inductive T__
   (A : Type)
@@ -165,7 +165,7 @@ Inductive T__
           Path.T (T_ A A_ B B_ f g) x (value_ A A_ B B_ f g y_v)
         ->
           T__ A A_ A__ B B_ B__ f g x y
-  .
+.
 
 Definition compose {A B C : Type} (f : B -> C) (g : A -> B) : A -> C
   := fun x : A => f (g x).
@@ -257,273 +257,156 @@ Inductive T_
             (R_compose A A B f f (Function.compose g f) Function.id (R_id A B f) s)
         ->
           T_ R R_id R_compose A B
-  .
+.
 
 End TYPE.
 
+Module Name.
+
+Variant Tag : Type
+  :=
+      variable : Tag
+    |
+      module : Tag
+.
+
+End Name.
+
 Module Expression.
 
-Inductive T (X : Type) : Type
+Inductive T (X : Name.Tag -> Type) : Type
   :=
-    variable : X -> T X
-  |
-    application : T X -> T X -> T X
-  |
-    abstraction : T X -> (X -> T X) -> T X
-  |
-    (* Type : Type *)
-    type_type : T X
-  |
-    type_function : T X -> (X -> T X) -> T X
-  .
+      variable : X Name.variable -> T X
+    |
+      abstraction : X Name.variable -> T X -> T X -> T X
+    |
+      application : T X -> T X -> T X
+    |
+      type_type : T X
+    |
+      type_function : X Name.variable -> T X -> T X -> T X
+.
 
-Inductive T_ (X : Type) (X_ : X -> X -> Type) (x : T X) (y : T X) : Type
+Inductive T_
+  (X : Name.Tag -> Type)
+  (X_ : forall tag : Name.Tag,  X tag -> X tag -> Type)
+  (x : T X)
+  (y : T X)
+  : Type
   :=
-    variable_
-      :
-        forall
-          x_v : X
-        ,
-        forall
-          y_v : X
-        ,
-          X_ x_v y_v
-        ->
-          Path.T (T X) x (variable X x_v)
-        ->
-          Path.T (T X) y (variable X y_v)
-        ->
-          T_ X X_ x y
-  |
-    application_
-      :
-        forall
-          x_f : T X
-        ,
-        forall
-          x_x : T X
-        ,
-        forall
-          y_f : T X
-        ,
-        forall
-          y_x : T X
-        ,
-          T_ X X_ x_f y_f
-        ->
-          T_ X X_ x_x y_x
-        ->
-          Path.T (T X) x (application X x_f x_x)
-        ->
-          Path.T (T X) y (application X y_f y_x)
-        ->
-          T_ X X_ x y
-  |
-    abstraction_
-      :
-        forall
-          x_t : T X
-        ,
-        forall
-          x_f : X -> T X
-        ,
-        forall
-          y_t : T X
-        ,
-        forall
-          y_f : X -> T X
-        ,
-          T_ X X_ x_t y_t
-        ->
-          Function.T_
-            X
-            X_
-            (T X)
-            (T_ X X_)
-            x_f
-            y_f
-        ->
-          Path.T (T X) x (abstraction X x_t x_f)
-        ->
-          Path.T (T X) y (abstraction X y_t y_f)
-        ->
-          T_ X X_ x y
-  |
-    type_type_
-      :
-          Path.T (T X) x (type_type X)
-        ->
-          Path.T (T X) y (type_type X)
-        ->
-          T_ X X_ x y
-  |
-    type_function_
-      :
-        forall
-          x_t : T X
-        ,
-        forall
-          x_p : X -> T X
-        ,
-        forall
-          y_t : T X
-        ,
-        forall
-          y_p : X -> T X
-        ,
-          T_ X X_ x_t y_t
-        ->
-          Function.T_
-            X
-            X_
-            (T X)
-            (T_ X X_)
-            x_p
-            y_p
-        ->
-          Path.T (T X) x (type_function X x_t x_p)
-        ->
-          Path.T (T X) y (type_function X y_t y_p)
-        ->
-          T_ X X_ x y
+      variable_
+        :
+          forall
+            x_v : X Name.variable
+          ,
+          forall
+            y_v : X Name.variable
+          ,
+            X_ Name.variable x_v y_v
+          ->
+            Path.T (T X) x (variable X x_v)
+          ->
+            Path.T (T X) y (variable X y_v)
+          ->
+            T_ X X_ x y
+    |
+      application_
+        :
+          forall
+            x_t : T X
+          ,
+          forall
+            x_u : T X
+          ,
+          forall
+            y_t : T X
+          ,
+          forall
+            y_u : T X
+          ,
+            T_ X X_ x_t y_t
+          ->
+            T_ X X_ x_u y_u
+          ->
+            Path.T (T X) x (application X x_t x_u)
+          ->
+            Path.T (T X) y (application X y_t y_u)
+          ->
+            T_ X X_ x y
+    |
+      abstraction_
+        :
+          forall
+            x_x : X Name.variable
+          ,
+          forall
+            x_A : T X
+          ,
+          forall
+            x_t : T X
+          ,
+          forall
+            y_x : X Name.variable
+          ,
+          forall
+            y_A : T X
+          ,
+          forall
+            y_t : T X
+          ,
+            X_ Name.variable x_x y_x
+          ->
+            T_ X X_ x_A y_A
+          ->
+            T_ X X_ x_t y_t
+          ->
+            Path.T (T X) x (abstraction X x_x x_A x_t)
+          ->
+            Path.T (T X) y (abstraction X y_x x_A x_t)
+          ->
+            T_ X X_ x y
+    |
+      type_type_
+        :
+            Path.T (T X) x (type_type X)
+          ->
+            Path.T (T X) y (type_type X)
+          ->
+            T_ X X_ x y
+    |
+      type_function_
+        :
+          forall
+            x_x : X Name.variable
+          ,
+          forall
+            x_A : T X
+          ,
+          forall
+            x_B : T X
+          ,
+          forall
+            y_x : X Name.variable
+          ,
+          forall
+            y_A : T X
+          ,
+          forall
+            y_B : T X
+          ,
+            X_ Name.variable x_x y_x
+          ->
+            T_ X X_ x_A y_A
+          ->
+            T_ X X_ x_B y_B
+          ->
+            Path.T (T X) x (type_function X x_x x_A x_B)
+          ->
+            Path.T (T X) y (type_function X y_x y_A y_B)
+          ->
+            T_ X X_ x y
   .
 
 End Expression.
-
-Definition flatten (X : Type) (x : Expression.T (Expression.T X)) : Expression.T X
-  :=
-    let
-      func
-        :=
-          fix func (x : Expression.T (Expression.T X)) {struct x} : Expression.T X
-            :=
-              match x with
-                Expression.variable _ x_v => x_v
-              |
-                Expression.application _ x_f x_x
-                  =>
-                    Expression.application X (func x_f) (func x_x)
-              |
-                Expression.abstraction _ x_t x_f
-                  =>
-                    Expression.abstraction
-                      X
-                      (func x_t)
-                      (fun x_v : X => func (x_f (Expression.variable X x_v)))
-              |
-                Expression.type_type _ => Expression.type_type X
-              |
-                Expression.type_function _ x_t x_p
-                  =>
-                    Expression.type_function
-                      X
-                      (func x_t)
-                      (fun x_v : X => func (x_p (Expression.variable X x_v)))
-              end
-    in
-      func x
-  .
-
-Definition substitute
-  (x : forall X : Type, Expression.T X)
-  (y : forall X : Type, X -> Expression.T X)
-  : forall X : Type, Expression.T X
-  :=
-    fun (X : Type) => flatten X (y (Expression.T X) (x X))
-  .
-
-Module Is_Typed.
-
-Inductive T
-  (X : Type)
-  (f : (X -> Expression.T X) -> Expression.T X -> Expression.T X)
-  (R : X -> Expression.T X -> Type)
-  (x : Expression.T X)
-  (t : Expression.T X)
-  : Type
-  :=
-    variable
-      :
-        forall
-          v_x : X
-        ,
-        forall
-          v_A : Expression.T X
-        ,
-          R v_x v_A
-        ->
-          Path.T (Expression.T X) x (Expression.variable X v_x)
-        ->
-          Path.T (Expression.T X) t v_A
-        ->
-          T X f R x t
-  |
-    application
-      :
-        forall
-          v_A : Expression.T X
-        ,
-        forall
-          v_B : X -> Expression.T X
-        ,
-        forall
-          v_t : Expression.T X
-        ,
-        forall
-          v_u : Expression.T X
-        ,
-          (T X f R v_t (Expression.type_function X v_A v_B))
-        ->
-          (T X f R v_u v_A)
-        ->
-          Path.T (Expression.T X) x (Expression.application X v_t v_u)
-        ->
-          Path.T (Expression.T X) t (f v_B v_u)
-        ->
-          T X f R x t
-  |
-    abstraction
-      :
-        forall
-          v_A : Expression.T X
-        ,
-        forall
-          v_B : X -> Expression.T X
-        ,
-        forall
-          v_t : X -> Expression.T X
-        ,
-          (forall v_x : X, R v_x v_A -> T X f R (v_t v_x) (v_B v_x))
-        ->
-          Path.T (Expression.T X) x (Expression.abstraction X v_A v_t)
-        ->
-          Path.T (Expression.T X) t (Expression.type_function X v_A v_B)
-        ->
-          T X f R x t
-  |
-    type_type
-      :
-          Path.T (Expression.T X) x (Expression.type_type X)
-        ->
-          Path.T (Expression.T X) t (Expression.type_type X)
-        ->
-          T X f R x t
-  |
-    type_function
-      :
-        forall
-          v_A : Expression.T X
-        ,
-        forall
-          v_B : X -> Expression.T X
-        ,
-          Path.T (Expression.T X) x (Expression.type_function X v_A v_B)
-        ->
-          Path.T (Expression.T X) t (Expression.type_type X)
-        ->
-          T X f R x t
-  .
-
-End Is_Typed.
 
 End Main.
