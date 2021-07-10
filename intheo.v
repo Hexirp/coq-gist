@@ -417,7 +417,7 @@ Module MODULE.
 
 Inductive T (X : Name.Tag.T -> Type) : Type
   :=
-      import : X Name.Tag.module -> T X -> T X
+      use : X Name.Tag.module -> T X -> T X
     |
       define_variable : X Name.Tag.variable -> Expression.T X -> T X -> T X
     |
@@ -429,5 +429,59 @@ Inductive T (X : Name.Tag.T -> Type) : Type
 .
 
 End MODULE.
+
+Module Bool.
+
+Inductive T : Type
+  :=
+      true : T
+    |
+      false : T
+.
+
+End Bool.
+
+Module Naming.
+
+Definition Namespace (X : Name.Tag.T -> Type) : Type
+  := forall tag : Name.Tag.T, X tag -> Bool.T
+.
+
+(*
+Axiom collect_name
+  (X : Name.Tag.T -> Type)
+  (X_ : forall tag : Name.Tag.T, X tag -> X tag -> Bool.T)
+  : MODULE.T X -> Namespace X
+.
+*)
+
+(*
+Definition is_valid
+  (X : Name.Tag.T -> Type)
+  (X_ : forall tag : Name.Tag.T, X tag -> X tag -> Bool.T)
+  (X_prefix : forall tag : Name.Tag.T, X Name.Tag.module -> X tag -> X tag)
+  : MODULE.T X -> Namespace X -> Bool.T
+.
+Proof.
+  refine
+    (
+      fix is_valid
+        (module : MODULE.T X)
+        (namespace : Namespace X)
+        {struct module}
+        : Bool.T
+        := _
+    )
+  .
+  refine
+    (
+      match module with
+          MODULE.use module_i module_n => _
+        |
+          MODULE.define_variable => _
+    )
+*)
+
+End Naming.
 
 End Main.
