@@ -413,4 +413,21 @@ Inductive T_
 
 End Expression.
 
+Module MODULE.
+
+Inductive T (X : Name.Tag.T -> Type) : Type
+  :=
+      import : X Name.Tag.module -> T X -> T X
+    |
+      define_variable : X Name.Tag.variable -> Expression.T X -> T X -> T X
+    |
+      define_value : X Name.Tag.variable -> Expression.T X -> Expression.T X -> T X -> T X
+    |
+      define_module : X Name.Tag.module -> T X -> T X
+    |
+      eom : T X
+.
+
+End MODULE.
+
 End Main.
