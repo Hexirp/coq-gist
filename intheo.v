@@ -263,33 +263,37 @@ End TYPE.
 
 Module Name.
 
-Variant Tag : Type
+Module Tag.
+
+Variant T : Type
   :=
-      variable : Tag
+      variable : T
     |
-      module : Tag
+      module : T
 .
+
+End Tag.
 
 End Name.
 
 Module Expression.
 
-Inductive T (X : Name.Tag -> Type) : Type
+Inductive T (X : Name.Tag.T -> Type) : Type
   :=
-      variable : X Name.variable -> T X
+      variable : X Name.Tag.variable -> T X
     |
-      abstraction : X Name.variable -> T X -> T X -> T X
+      abstraction : X Name.Tag.variable -> T X -> T X -> T X
     |
       application : T X -> T X -> T X
     |
       type_type : T X
     |
-      type_function : X Name.variable -> T X -> T X -> T X
+      type_function : X Name.Tag.variable -> T X -> T X -> T X
 .
 
 Inductive T_
-  (X : Name.Tag -> Type)
-  (X_ : forall tag : Name.Tag,  X tag -> X tag -> Type)
+  (X : Name.Tag.T -> Type)
+  (X_ : forall tag : Name.Tag.T,  X tag -> X tag -> Type)
   (x : T X)
   (y : T X)
   : Type
@@ -297,12 +301,12 @@ Inductive T_
       variable_
         :
           forall
-            x_v : X Name.variable
+            x_v : X Name.Tag.variable
           ,
           forall
-            y_v : X Name.variable
+            y_v : X Name.Tag.variable
           ,
-            X_ Name.variable x_v y_v
+            X_ Name.Tag.variable x_v y_v
           ->
             Path.T (T X) x (variable X x_v)
           ->
@@ -337,7 +341,7 @@ Inductive T_
       abstraction_
         :
           forall
-            x_x : X Name.variable
+            x_x : X Name.Tag.variable
           ,
           forall
             x_A : T X
@@ -346,7 +350,7 @@ Inductive T_
             x_t : T X
           ,
           forall
-            y_x : X Name.variable
+            y_x : X Name.Tag.variable
           ,
           forall
             y_A : T X
@@ -354,7 +358,7 @@ Inductive T_
           forall
             y_t : T X
           ,
-            X_ Name.variable x_x y_x
+            X_ Name.Tag.variable x_x y_x
           ->
             T_ X X_ x_A y_A
           ->
@@ -377,7 +381,7 @@ Inductive T_
       type_function_
         :
           forall
-            x_x : X Name.variable
+            x_x : X Name.Tag.variable
           ,
           forall
             x_A : T X
@@ -386,7 +390,7 @@ Inductive T_
             x_B : T X
           ,
           forall
-            y_x : X Name.variable
+            y_x : X Name.Tag.variable
           ,
           forall
             y_A : T X
@@ -394,7 +398,7 @@ Inductive T_
           forall
             y_B : T X
           ,
-            X_ Name.variable x_x y_x
+            X_ Name.Tag.variable x_x y_x
           ->
             T_ X X_ x_A y_A
           ->
